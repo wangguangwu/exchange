@@ -38,6 +38,31 @@
         <option value="$PROJECT_DIR$/push-server/pom.xml" />
         <option value="$PROJECT_DIR$/push-server/push-server-api/pom.xml" />
         <option value="$PROJECT_DIR$/push-server/push-server-core/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-common/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-asset-service/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-clearing-service/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-clearing-service/clearing-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-clearing-service/exchange-clearing-api/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-clearing-service/exchange-clearing-core/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-match-service/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-match-service/exchange-match-api/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-match-service/exchange-match-core/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-order-service/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-order-service/exchange-order-api/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-order-service/exchange-order-core/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-ui/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-push-service/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-push-service/exchange-push-core/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-push-service/exchange-push-api/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-quotation-service/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-quotation-service/exchange-quotation-api/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-quotation-service/exchange-quotation-core/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-trade-service/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-trade-service/exchange-trade-api/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-trade-service/exchange-trade-core/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-user-service/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-user-service/exchange-user-api/pom.xml" />
+        <option value="$PROJECT_DIR$/exchange-user-service/exchange-user-core/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
@@ -50,5 +75,8 @@
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="jpab" />
   </component>
 </project>

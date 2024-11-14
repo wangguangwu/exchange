@@ -6,11 +6,10 @@
     <parent>
         <groupId>com.wangguangwu</groupId>
         <artifactId>exchange-asset-service</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0</version>
         <relativePath/>
     </parent>
 
     <artifactId>exchange-asset-api</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
 
 </project>

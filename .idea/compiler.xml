@@ -7,18 +7,28 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="exchange-asset-core" />
+        <module name="exchange-quotation-api" />
+        <module name="exchange-order-core" />
+        <module name="exchange-quotation-core" />
         <module name="clearing-server-core" />
+        <module name="exchange-user-api" />
         <module name="push-server-api" />
-        <module name="exchange-trade-service" />
         <module name="order-server-core" />
         <module name="clearing-server-api" />
+        <module name="exchange-push-api" />
+        <module name="exchange-trade-core" />
         <module name="exchange-asset-api" />
+        <module name="exchange-clearing-core" />
+        <module name="exchange-clearing-api" />
+        <module name="exchange-order-api" />
+        <module name="exchange-user-core" />
         <module name="match-server-api" />
         <module name="push-server-core" />
         <module name="exchange-ui" />
+        <module name="exchange-push-core" />
+        <module name="exchange-trade-api" />
         <module name="match-server-core" />
         <module name="exchange-common" />
-        <module name="exchange-quotation-service" />
         <module name="order-server-api" />
       </profile>
     </annotationProcessing>
@@ -36,14 +46,27 @@
       <module name="exchange-asset-api" options="-parameters" />
       <module name="exchange-asset-core" options="-parameters" />
       <module name="exchange-asset-service" options="" />
+      <module name="exchange-clearing-api" options="-parameters" />
+      <module name="exchange-clearing-core" options="-parameters" />
       <module name="exchange-clearing-service" options="" />
       <module name="exchange-common" options="-parameters" />
       <module name="exchange-match-service" options="" />
+      <module name="exchange-order-api" options="-parameters" />
+      <module name="exchange-order-core" options="-parameters" />
       <module name="exchange-order-service" options="" />
+      <module name="exchange-push-api" options="-parameters" />
+      <module name="exchange-push-core" options="-parameters" />
       <module name="exchange-push-service" options="" />
-      <module name="exchange-quotation-service" options="-parameters" />
-      <module name="exchange-trade-service" options="-parameters" />
+      <module name="exchange-quotation-api" options="-parameters" />
+      <module name="exchange-quotation-core" options="-parameters" />
+      <module name="exchange-quotation-service" options="" />
+      <module name="exchange-trade-api" options="-parameters" />
+      <module name="exchange-trade-core" options="-parameters" />
+      <module name="exchange-trade-service" options="" />
       <module name="exchange-ui" options="-parameters" />
+      <module name="exchange-user-api" options="-parameters" />
+      <module name="exchange-user-core" options="-parameters" />
+      <module name="exchange-user-service" options="" />
       <module name="match-server-api" options="-parameters" />
       <module name="match-server-core" options="-parameters" />
       <module name="order-server-api" options="-parameters" />

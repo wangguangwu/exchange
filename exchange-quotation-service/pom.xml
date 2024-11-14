@@ -6,31 +6,15 @@
     <parent>
         <groupId>com.wangguangwu</groupId>
         <artifactId>exchange</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
 
     <artifactId>exchange-quotation-service</artifactId>
+    <packaging>pom</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
+    <modules>
+        <module>exchange-quotation-api</module>
+        <module>exchange-quotation-core</module>
+    </modules>
 
-        <dependency>
-            <groupId>com.wangguangwu</groupId>
-            <artifactId>exchange-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <finalName>${project.artifactId}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>
