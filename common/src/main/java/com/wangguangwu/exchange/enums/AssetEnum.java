@@ -1,14 +1,13 @@
 package com.wangguangwu.exchange.enums;
 
 /**
+ * 资产类型
+ *
  * @author wangguangwu
  */
-public enum AsserEnum {
+public enum AssetEnum {
 
     BTC,
 
-    USD;
-
-    public static final int SCALE = 2;
-
+    USD
 }

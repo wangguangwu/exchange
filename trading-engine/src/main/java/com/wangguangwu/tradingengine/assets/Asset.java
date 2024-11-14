@@ -1,14 +1,18 @@
 package com.wangguangwu.tradingengine.assets;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
 /**
+ * 资产信息
+ *
  * @author wangguangwu
  */
 @AllArgsConstructor
-public class Assets {
+@Data
+public class Asset {
 
     /**
      * 可用余额
@@ -20,7 +24,7 @@ public class Assets {
      */
     BigDecimal frozen;
 
-    public Assets() {
+    public Asset() {
         this(BigDecimal.ZERO, BigDecimal.ZERO);
     }
 }

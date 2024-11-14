@@ -1,4 +1,12 @@
-package com.wangguangwu.exchange.enums;/**
+package com.wangguangwu.exchange.enums;
+
+/**
+ * 锁类型枚举
+ *
  * @author wangguangwu
- */public class LockType {
+ */
+public enum LockType {
+
+    READ, WRITE
+
 }

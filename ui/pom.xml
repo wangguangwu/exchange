@@ -3,9 +3,8 @@
 
 	<parent>
 		<groupId>com.wangguangwu</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>exchange-demo</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>ui</artifactId>

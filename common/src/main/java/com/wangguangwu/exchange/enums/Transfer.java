@@ -1,4 +1,4 @@
-package com.wangguangwu.tradingengine.assets;
+package com.wangguangwu.exchange.enums;
 
 /**
  * 资产对应的操作只有一种类型 -> 转账

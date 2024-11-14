@@ -1,4 +1,4 @@
-package com.wangguangwu.tradingengine.assets.lockmanager;
+package com.wangguangwu.exchange.lockmanager;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -10,11 +10,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
+ * 用户锁管理器，管理用户级别的锁。
+ * <p>
+ * 提供对特定用户的锁定和解锁操作，并支持清理过期锁。
+ *
  * @author wangguangwu
  */
 @Component
 @Slf4j
-public class UserLockManager {
+public class UserLockManager extends LockManager {
 
     /**
      * 用户锁映射：用户ID -> 用户的读写锁
@@ -22,14 +26,14 @@ public class UserLockManager {
     private final ConcurrentMap<Long, ReentrantReadWriteLock> userLocks = new ConcurrentHashMap<>();
 
     /**
+     * 用户锁的最后使用时间：用户ID -> 时间戳
+     */
+    private final ConcurrentMap<Long, Long> lockUsageTimestamps = new ConcurrentHashMap<>();
+
+    /**
      * 清理不再使用的锁的阈值（毫秒）
      */
     private static final long LOCK_EXPIRATION_THRESHOLD = 10 * 60 * 1000;
-
-    /**
-     * 锁的使用时间戳映射
-     */
-    private final ConcurrentMap<Long, Long> lockUsageTimestamps = new ConcurrentHashMap<>();
 
     /**
      * 获取用户的读写锁。
@@ -38,6 +42,7 @@ public class UserLockManager {
      * @return 用户的读写锁
      */
     public ReentrantReadWriteLock getLock(Long userId) {
+        // 更新锁的最后使用时间
         lockUsageTimestamps.put(userId, System.currentTimeMillis());
         return userLocks.computeIfAbsent(userId, k -> new ReentrantReadWriteLock());
     }

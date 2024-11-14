@@ -5,6 +5,13 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/common/pom.xml" />
+        <option value="$PROJECT_DIR$/push/pom.xml" />
+        <option value="$PROJECT_DIR$/quotation/pom.xml" />
+        <option value="$PROJECT_DIR$/trading-api/pom.xml" />
+        <option value="$PROJECT_DIR$/trading-engine/pom.xml" />
+        <option value="$PROJECT_DIR$/trading-sequencer/pom.xml" />
+        <option value="$PROJECT_DIR$/ui/pom.xml" />
       </list>
     </option>
   </component>
