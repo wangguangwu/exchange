@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.wangguangwu</groupId>
-    <artifactId>exchange-demo</artifactId>
+    <artifactId>exchange</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 

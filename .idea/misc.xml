@@ -32,6 +32,12 @@
         <option value="$PROJECT_DIR$/match-server/pom.xml" />
         <option value="$PROJECT_DIR$/match-server/match-server-api/pom.xml" />
         <option value="$PROJECT_DIR$/match-server/match-server-core/pom.xml" />
+        <option value="$PROJECT_DIR$/order-server/pom.xml" />
+        <option value="$PROJECT_DIR$/order-server/order-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/order-server/order-server-core/pom.xml" />
+        <option value="$PROJECT_DIR$/push-server/pom.xml" />
+        <option value="$PROJECT_DIR$/push-server/push-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/push-server/push-server-core/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

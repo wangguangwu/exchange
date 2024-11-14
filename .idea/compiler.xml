@@ -6,21 +6,23 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="asset-server-core" />
+        <module name="exchange-asset-core" />
         <module name="clearing-server-core" />
+        <module name="push-server-api" />
+        <module name="exchange-trade-service" />
+        <module name="order-server-core" />
         <module name="clearing-server-api" />
-        <module name="common" />
-        <module name="ui" />
+        <module name="exchange-asset-api" />
         <module name="match-server-api" />
-        <module name="asset-server-api" />
-        <module name="trade-server" />
-        <module name="quotation" />
+        <module name="push-server-core" />
+        <module name="exchange-ui" />
         <module name="match-server-core" />
+        <module name="exchange-common" />
+        <module name="exchange-quotation-service" />
+        <module name="order-server-api" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="order-server" target="17" />
-      <module name="push-server" target="17" />
       <module name="trading-api" target="17" />
       <module name="trading-engine" target="17" />
       <module name="trading-sequencer" target="17" />
@@ -28,25 +30,29 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="asset-server" options="" />
-      <module name="asset-server-api" options="-parameters" />
-      <module name="asset-server-core" options="-parameters" />
-      <module name="clearing-server" options="" />
       <module name="clearing-server-api" options="-parameters" />
       <module name="clearing-server-core" options="-parameters" />
-      <module name="common" options="-parameters" />
-      <module name="exchange-demo" options="" />
-      <module name="match-server" options="" />
+      <module name="exchange" options="" />
+      <module name="exchange-asset-api" options="-parameters" />
+      <module name="exchange-asset-core" options="-parameters" />
+      <module name="exchange-asset-service" options="" />
+      <module name="exchange-clearing-service" options="" />
+      <module name="exchange-common" options="-parameters" />
+      <module name="exchange-match-service" options="" />
+      <module name="exchange-order-service" options="" />
+      <module name="exchange-push-service" options="" />
+      <module name="exchange-quotation-service" options="-parameters" />
+      <module name="exchange-trade-service" options="-parameters" />
+      <module name="exchange-ui" options="-parameters" />
       <module name="match-server-api" options="-parameters" />
       <module name="match-server-core" options="-parameters" />
-      <module name="order-server" options="-parameters" />
-      <module name="push-server" options="-parameters" />
-      <module name="quotation" options="-parameters" />
-      <module name="trade-server" options="-parameters" />
+      <module name="order-server-api" options="-parameters" />
+      <module name="order-server-core" options="-parameters" />
+      <module name="push-server-api" options="-parameters" />
+      <module name="push-server-core" options="-parameters" />
       <module name="trading-api" options="-parameters" />
       <module name="trading-engine" options="-parameters" />
       <module name="trading-sequencer" options="-parameters" />
-      <module name="ui" options="-parameters" />
     </option>
   </component>
 </project>

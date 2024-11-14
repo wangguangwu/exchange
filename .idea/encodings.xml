@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/asset-server/asset-server-api/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/asset-server/asset-server-core/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/asset-server/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/asset-server/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/clearing-server/clearing-server-api/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/clearing-server/clearing-server-core/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/clearing-server/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/clearing-server/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/common/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/match-server/match-server-api/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/match-server/match-server-core/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/match-server/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/match-server/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/order-server/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/push-server/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/quotation/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-asset-service/exchange-asset-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-asset-service/exchange-asset-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-asset-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-asset-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-clearing-service/clearing-server-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-clearing-service/clearing-server-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-clearing-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-clearing-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-match-service/match-server-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-match-service/match-server-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-match-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-match-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-order-service/order-server-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-order-service/order-server-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-order-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-order-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-push-service/push-server-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-push-service/push-server-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-push-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-push-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-quotation-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-trade-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/exchange-ui/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/trade-server/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/trading-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/trading-engine/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/trading-sequencer/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/ui/src/main/java" charset="UTF-8" />
   </component>
 </project>
