@@ -12,7 +12,34 @@
         <option value="$PROJECT_DIR$/trading-engine/pom.xml" />
         <option value="$PROJECT_DIR$/trading-sequencer/pom.xml" />
         <option value="$PROJECT_DIR$/ui/pom.xml" />
+        <option value="$PROJECT_DIR$/order/pom.xml" />
+        <option value="$PROJECT_DIR$/clearing/pom.xml" />
+        <option value="$PROJECT_DIR$/asset/pom.xml" />
+        <option value="$PROJECT_DIR$/match/pom.xml" />
+        <option value="$PROJECT_DIR$/asset/asset-core/pom.xml" />
+        <option value="$PROJECT_DIR$/asset/asset-api/pom.xml" />
+        <option value="$PROJECT_DIR$/clearing/clearing-api/pom.xml" />
+        <option value="$PROJECT_DIR$/clearing/clearing-core/pom.xml" />
+        <option value="$PROJECT_DIR$/trade-server/pom.xml" />
+        <option value="$PROJECT_DIR$/asset-server/pom.xml" />
+        <option value="$PROJECT_DIR$/asset-server/asset-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/asset-server/asset-core/pom.xml" />
+        <option value="$PROJECT_DIR$/clearing-server/pom.xml" />
+        <option value="$PROJECT_DIR$/clearing-server/clearing-api/pom.xml" />
+        <option value="$PROJECT_DIR$/clearing-server/clearing-core/pom.xml" />
+        <option value="$PROJECT_DIR$/clearing-server/clearing-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/clearing-server/clearing-server-core/pom.xml" />
+        <option value="$PROJECT_DIR$/match-server/pom.xml" />
+        <option value="$PROJECT_DIR$/match-server/match-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/match-server/match-server-core/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/trading-api/pom.xml" />
+        <option value="$PROJECT_DIR$/trading-engine/pom.xml" />
+        <option value="$PROJECT_DIR$/trading-sequencer/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">

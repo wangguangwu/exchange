@@ -29,6 +29,7 @@
         <springcloud.version>2022.0.0</springcloud.version>
         <springdoc.version>2.0.0</springdoc.version>
         <vertx.version>4.3.1</vertx.version>
+        <baomidou.version>3.5.5</baomidou.version>
     </properties>
 
     <dependencyManagement>
@@ -39,6 +40,16 @@
                 <version>${springcloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>${baomidou.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>${baomidou.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -6,22 +6,43 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="trading-engine" />
-        <module name="trading-api" />
+        <module name="asset-server-core" />
+        <module name="clearing-server-core" />
+        <module name="clearing-server-api" />
         <module name="common" />
-        <module name="trading-sequencer" />
         <module name="ui" />
+        <module name="match-server-api" />
+        <module name="asset-server-api" />
+        <module name="trade-server" />
         <module name="quotation" />
-        <module name="push" />
+        <module name="match-server-core" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="order-server" target="17" />
+      <module name="push-server" target="17" />
+      <module name="trading-api" target="17" />
+      <module name="trading-engine" target="17" />
+      <module name="trading-sequencer" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="asset-server" options="" />
+      <module name="asset-server-api" options="-parameters" />
+      <module name="asset-server-core" options="-parameters" />
+      <module name="clearing-server" options="" />
+      <module name="clearing-server-api" options="-parameters" />
+      <module name="clearing-server-core" options="-parameters" />
       <module name="common" options="-parameters" />
       <module name="exchange-demo" options="" />
-      <module name="push" options="-parameters" />
+      <module name="match-server" options="" />
+      <module name="match-server-api" options="-parameters" />
+      <module name="match-server-core" options="-parameters" />
+      <module name="order-server" options="-parameters" />
+      <module name="push-server" options="-parameters" />
       <module name="quotation" options="-parameters" />
+      <module name="trade-server" options="-parameters" />
       <module name="trading-api" options="-parameters" />
       <module name="trading-engine" options="-parameters" />
       <module name="trading-sequencer" options="-parameters" />
