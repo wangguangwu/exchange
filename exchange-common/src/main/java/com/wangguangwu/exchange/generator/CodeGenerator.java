@@ -21,12 +21,12 @@ public class CodeGenerator {
     /**
      * 项目名称
      */
-    private static final String PROJECT_NAME = "data-tushare";
+    private static final String PROJECT_NAME = "exchange-common";
 
     /**
      * 包名
      */
-    private static final String PACKAGE_NAME = "com.wangguangwu.datatushare";
+    private static final String PACKAGE_NAME = "com.wangguangwu.exchange";
 
     /**
      * 文件所在目录
@@ -36,7 +36,7 @@ public class CodeGenerator {
     /**
      * 数据库配置
      */
-    private static final String URL_PATH = "jdbc:mysql://127.0.0.1:3306/orderdb?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false";
+    private static final String URL_PATH = "jdbc:mysql://127.0.0.1:3306/exchangedb?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false";
     private static final String USER_NAME = "root";
     private static final String PASSWORD = "password";
 
@@ -46,7 +46,7 @@ public class CodeGenerator {
 
     private static void create() {
         // 创建的表名
-        String tableName = "dividend_item";
+        String tableName = "user";
 
         // 生成文件
         FastAutoGenerator.create(URL_PATH, USER_NAME, PASSWORD)
@@ -65,8 +65,8 @@ public class CodeGenerator {
                                 .parent(PACKAGE_NAME)
                                 // 设置不同文件的包名
                                 .entity("entity")
-                                .service("service.basic")
-                                .serviceImpl("service.basic.impl")
+                                .service("service")
+                                .serviceImpl("service.impl")
                                 .mapper("mapper")
                                 // 设置 mapperXml 生成路径
                                 .pathInfo(Collections.singletonMap(OutputFile.xml, PROJECT_NAME + "/src/main/resources/mapper"))

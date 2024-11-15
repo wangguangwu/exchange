@@ -21,13 +21,13 @@
         <module name="exchange-clearing-core" />
         <module name="exchange-clearing-api" />
         <module name="exchange-order-api" />
+        <module name="exchange-match-core" />
         <module name="exchange-user-core" />
-        <module name="match-server-api" />
         <module name="push-server-core" />
         <module name="exchange-ui" />
         <module name="exchange-push-core" />
         <module name="exchange-trade-api" />
-        <module name="match-server-core" />
+        <module name="exchange-match-api" />
         <module name="exchange-common" />
         <module name="order-server-api" />
       </profile>
@@ -43,32 +43,32 @@
       <module name="clearing-server-api" options="-parameters" />
       <module name="clearing-server-core" options="-parameters" />
       <module name="exchange" options="" />
-      <module name="exchange-asset-api" options="-parameters" />
-      <module name="exchange-asset-core" options="-parameters" />
+      <module name="exchange-asset-api" options="" />
+      <module name="exchange-asset-core" options="" />
       <module name="exchange-asset-service" options="" />
-      <module name="exchange-clearing-api" options="-parameters" />
-      <module name="exchange-clearing-core" options="-parameters" />
+      <module name="exchange-clearing-api" options="" />
+      <module name="exchange-clearing-core" options="" />
       <module name="exchange-clearing-service" options="" />
-      <module name="exchange-common" options="-parameters" />
+      <module name="exchange-common" options="" />
+      <module name="exchange-match-api" options="" />
+      <module name="exchange-match-core" options="" />
       <module name="exchange-match-service" options="" />
-      <module name="exchange-order-api" options="-parameters" />
-      <module name="exchange-order-core" options="-parameters" />
+      <module name="exchange-order-api" options="" />
+      <module name="exchange-order-core" options="" />
       <module name="exchange-order-service" options="" />
-      <module name="exchange-push-api" options="-parameters" />
-      <module name="exchange-push-core" options="-parameters" />
+      <module name="exchange-push-api" options="" />
+      <module name="exchange-push-core" options="" />
       <module name="exchange-push-service" options="" />
-      <module name="exchange-quotation-api" options="-parameters" />
-      <module name="exchange-quotation-core" options="-parameters" />
+      <module name="exchange-quotation-api" options="" />
+      <module name="exchange-quotation-core" options="" />
       <module name="exchange-quotation-service" options="" />
-      <module name="exchange-trade-api" options="-parameters" />
-      <module name="exchange-trade-core" options="-parameters" />
+      <module name="exchange-trade-api" options="" />
+      <module name="exchange-trade-core" options="" />
       <module name="exchange-trade-service" options="" />
-      <module name="exchange-ui" options="-parameters" />
-      <module name="exchange-user-api" options="-parameters" />
-      <module name="exchange-user-core" options="-parameters" />
+      <module name="exchange-ui" options="" />
+      <module name="exchange-user-api" options="" />
+      <module name="exchange-user-core" options="" />
       <module name="exchange-user-service" options="" />
-      <module name="match-server-api" options="-parameters" />
-      <module name="match-server-core" options="-parameters" />
       <module name="order-server-api" options="-parameters" />
       <module name="order-server-core" options="-parameters" />
       <module name="push-server-api" options="-parameters" />
