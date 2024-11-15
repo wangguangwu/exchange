@@ -26,4 +26,10 @@ public class CommonServiceException extends RuntimeException {
         this.data = ResponseEnum.COMMON_SERVICE_EXCEPTION.getCode();
         this.message = message;
     }
+
+    public CommonServiceException(String message, Throwable e) {
+        super(message, e);
+        this.data = ResponseEnum.COMMON_SERVICE_EXCEPTION.getCode();
+        this.message = message;
+    }
 }

@@ -46,7 +46,7 @@ public class CodeGenerator {
 
     private static void create() {
         // 创建的表名
-        String tableName = "user";
+        String tableName = "asset,asset_type,asset_transaction";
 
         // 生成文件
         FastAutoGenerator.create(URL_PATH, USER_NAME, PASSWORD)

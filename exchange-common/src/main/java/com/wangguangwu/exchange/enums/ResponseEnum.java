@@ -52,7 +52,12 @@ public enum ResponseEnum {
     /**
      * 订单服务异常
      */
-    ORDER_SERVER_EXCEPTION(1005, "订单服务异常");
+    ORDER_SERVER_EXCEPTION(1005, "订单服务异常"),
+
+    /**
+     * 资产服务异常
+     */
+    ASSETS_SERVER_EXCEPTION(1006, "资产服务异常");
 
     /**
      * 状态码

@@ -1,6 +1,7 @@
 package com.wangguangwu.exchange.exception;
 
 import com.wangguangwu.exchange.enums.AssetEnum;
+import com.wangguangwu.exchange.enums.ResponseEnum;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -17,30 +18,16 @@ import java.math.BigDecimal;
 @Getter
 public class AssetException extends RuntimeException {
 
-    private final Long userId;
-    private final AssetEnum assetId;
-    private final BigDecimal amount;
+    protected final Integer data;
+    protected final String message;
 
-    /**
-     * 构造方法，提供详细上下文信息。
-     *
-     * @param message 错误描述
-     * @param userId  用户 ID
-     * @param assetId 资产类型
-     * @param amount  操作金额
-     */
-    public AssetException(String message, Long userId, AssetEnum assetId, BigDecimal amount) {
-        super(message);
-        this.userId = userId;
-        this.assetId = assetId;
-        this.amount = amount;
+    public AssetException() {
+        this.data = ResponseEnum.ASSETS_SERVER_EXCEPTION.getCode();
+        this.message = ResponseEnum.ASSETS_SERVER_EXCEPTION.getMessage();
     }
 
-    @Override
-    public String toString() {
-        return String.format(
-                "AssetException{message='%s', userId=%d, assetId=%s, amount=%s}",
-                getMessage(), userId, assetId, amount
-        );
+    public AssetException(String message) {
+        this.data = ResponseEnum.ASSETS_SERVER_EXCEPTION.getCode();
+        this.message = message;
     }
 }
