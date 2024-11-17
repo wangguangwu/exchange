@@ -17,11 +17,6 @@
             <artifactId>exchange-order-api</artifactId>
             <version>1.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.wangguangwu</groupId>
-            <artifactId>exchange-common</artifactId>
-            <version>1.0</version>
-        </dependency>
     </dependencies>
 
 </project>
