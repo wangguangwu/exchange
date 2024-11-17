@@ -4,6 +4,7 @@ import com.wangguangwu.assetcore.service.CustomAssetService;
 import com.wangguangwu.exchange.api.AssetController;
 import com.wangguangwu.exchange.dto.AdjustBalanceRequest;
 import com.wangguangwu.exchange.dto.AssetDTO;
+import com.wangguangwu.exchange.dto.AssetTypeDTO;
 import com.wangguangwu.exchange.dto.FreezeRequest;
 import com.wangguangwu.exchange.response.Response;
 import lombok.RequiredArgsConstructor;
@@ -73,6 +74,16 @@ public class AssetControllerImpl implements AssetController {
         } catch (Exception e) {
             log.error("解冻资产失败，请求: {}, 错误信息: {}", request, e.getMessage(), e);
             return Response.error("资产解冻失败: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public Response<List<AssetTypeDTO>> listAssetTypes() {
+        try {
+            return Response.success(assetService.listAssetTypes());
+        } catch (Exception e) {
+            log.error("获取资产类型失败：{}", e.getMessage(), e);
+            return Response.error("获取资产类型失败: " + e.getMessage());
         }
     }
 }

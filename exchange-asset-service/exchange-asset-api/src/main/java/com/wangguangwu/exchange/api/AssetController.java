@@ -2,6 +2,7 @@ package com.wangguangwu.exchange.api;
 
 import com.wangguangwu.exchange.dto.AdjustBalanceRequest;
 import com.wangguangwu.exchange.dto.AssetDTO;
+import com.wangguangwu.exchange.dto.AssetTypeDTO;
 import com.wangguangwu.exchange.dto.FreezeRequest;
 import com.wangguangwu.exchange.response.Response;
 import org.springframework.web.bind.annotation.*;
@@ -49,4 +50,12 @@ public interface AssetController {
      */
     @PostMapping("/unfreeze")
     Response<String> unfreezeBalance(@RequestBody FreezeRequest request);
+
+    /**
+     * 获取资产类型列表
+     *
+     * @return 资产类型列表
+     */
+    @GetMapping("listAssetTypes")
+    Response<List<AssetTypeDTO>> listAssetTypes();
 }
