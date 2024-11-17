@@ -3,6 +3,7 @@ package com.wangguangwu.exchangeusercore.controller;
 import com.alibaba.fastjson2.JSON;
 import com.wangguangwu.exchange.api.UserController;
 import com.wangguangwu.exchange.dto.UserDTO;
+import com.wangguangwu.exchange.dto.UserPageQuery;
 import com.wangguangwu.exchange.response.Response;
 import com.wangguangwu.exchangeusercore.service.CustomUserService;
 import lombok.RequiredArgsConstructor;
@@ -76,14 +77,12 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public Response<List<UserDTO>> listUsers(int page, int size) {
+    public Response<List<UserDTO>> listUsers(UserPageQuery query) {
         try {
-            log.info("开始分页查询用户列表，页码: {}, 每页数量: {}", page, size);
-            List<UserDTO> users = customUserService.listUsers(page, size);
-            log.info("成功查询用户列表: {}", JSON.toJSONString(users));
+            List<UserDTO> users = customUserService.listUsers(query);
             return Response.success(users);
         } catch (Exception e) {
-            log.error("分页查询用户列表失败，页码: {}, 每页数量: {}, 错误信息: {}", page, size, e.getMessage(), e);
+            log.error("分页查询用户列表失败，查询信息: {}，异常信息：{}", JSON.toJSON(query), e.getMessage(), e);
             return Response.error("查询用户列表失败: " + e.getMessage());
         }
     }

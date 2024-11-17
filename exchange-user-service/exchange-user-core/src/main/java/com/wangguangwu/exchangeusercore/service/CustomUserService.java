@@ -1,8 +1,10 @@
 package com.wangguangwu.exchangeusercore.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wangguangwu.exchange.dto.UserDTO;
+import com.wangguangwu.exchange.dto.UserPageQuery;
 import com.wangguangwu.exchange.entity.UserDO;
 import com.wangguangwu.exchange.exception.UserException;
 import com.wangguangwu.exchange.service.UserService;
@@ -113,16 +115,24 @@ public class CustomUserService {
 
     /**
      * 分页查询用户
+     *
+     * @param query 分页查询条件
+     * @return 用户DTO列表
      */
-    public List<UserDTO> listUsers(int page, int size) {
-        if (page < 1 || size < 1) {
-            log.warn("分页参数不合法，page: {}, size: {}", page, size);
-            throw new UserException("分页参数不合法，page 和 size 必须大于 0");
-        }
+    public List<UserDTO> listUsers(UserPageQuery query) {
+        // 使用 LambdaQueryWrapper 构建查询条件
+        LambdaQueryWrapper<UserDO> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(query.getUsername() != null && !query.getUsername().isEmpty(), UserDO::getUsername, query.getUsername());
+        wrapper.like(query.getEmail() != null && !query.getEmail().isEmpty(), UserDO::getEmail, query.getEmail());
+        wrapper.like(query.getPhone() != null && !query.getPhone().isEmpty(), UserDO::getPhone, query.getPhone());
 
-        log.info("开始分页查询用户，page: {}, size: {}", page, size);
-        Page<UserDO> userPage = userService.page(new Page<>(page, size));
-        List<UserDTO> userList = userPage.getRecords().stream().map(this::mapToDTO).collect(Collectors.toList());
+        // 分页查询
+        Page<UserDO> userPage = userService.page(new Page<>(query.getPage(), query.getSize()), wrapper);
+        List<UserDTO> userList = userPage.getRecords()
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+
         log.info("分页查询完成，查询到用户数量: {}", userList.size());
         return userList;
     }
