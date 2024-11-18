@@ -1,183 +1,110 @@
 -- init exchange database
 
-DROP DATABASE IF EXISTS exchange;
+DROP DATABASE IF EXISTS exchangedb;
 
-CREATE DATABASE exchange;
+CREATE DATABASE exchangedb;
 
-USE exchange;
+USE exchangedb;
 
-CREATE TABLE api_key_auths (
-  apiKey VARCHAR(32) NOT NULL,
-  apiSecret VARCHAR(32) NOT NULL,
-  expiresAt BIGINT NOT NULL,
-  userId BIGINT NOT NULL,
-  PRIMARY KEY(apiKey)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
+-- ----------------------------
+-- Table structure for user_info
+-- ----------------------------
+DROP TABLE IF EXISTS `user_info`;
+CREATE TABLE `user_info` (
+                             `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户唯一标识',
+                             `username` VARCHAR(50) NOT NULL COMMENT '用户名（唯一）',
+                             `password_hash` VARCHAR(255) NOT NULL COMMENT '加密后的密码',
+                             `email` VARCHAR(100) DEFAULT NULL COMMENT '用户邮箱（可选）',
+                             `phone` VARCHAR(20) DEFAULT NULL COMMENT '用户手机号（可选）',
+                             `last_login` DATETIME DEFAULT NULL COMMENT '最近登录时间',
+                             `is_deleted` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '软删除标识：0=未删除，1=已删除',
+                             `version` BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '乐观锁版本号',
+                             `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户创建时间',
+                             `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '用户信息更新时间',
+                             PRIMARY KEY (`id`),
+                             UNIQUE KEY `idx_username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户详情表';
 
-
-CREATE TABLE clearings (
-  id BIGINT NOT NULL AUTO_INCREMENT,
-  counterOrderId BIGINT NOT NULL,
-  counterUserId BIGINT NOT NULL,
-  createdAt BIGINT NOT NULL,
-  direction VARCHAR(32) NOT NULL,
-  matchPrice DECIMAL(36,18) NOT NULL,
-  matchQuantity DECIMAL(36,18) NOT NULL,
-  orderId BIGINT NOT NULL,
-  orderStatusAfterClearing VARCHAR(32) NOT NULL,
-  orderUnfilledQuantityAfterClearing DECIMAL(36,18) NOT NULL,
-  sequenceId BIGINT NOT NULL,
-  type VARCHAR(32) NOT NULL,
-  userId BIGINT NOT NULL,
-  CONSTRAINT UNI_SEQ_ORD_CORD UNIQUE (sequenceId,orderId,counterOrderId),
-  PRIMARY KEY(id)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
-
-
-CREATE TABLE day_bars (
-  startTime BIGINT NOT NULL,
-  closePrice DECIMAL(36,18) NOT NULL,
-  highPrice DECIMAL(36,18) NOT NULL,
-  lowPrice DECIMAL(36,18) NOT NULL,
-  openPrice DECIMAL(36,18) NOT NULL,
-  quantity DECIMAL(36,18) NOT NULL,
-  PRIMARY KEY(startTime)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
-
-
-CREATE TABLE events (
-  sequenceId BIGINT NOT NULL,
-  createdAt BIGINT NOT NULL,
-  data VARCHAR(10000) NOT NULL,
-  previousId BIGINT NOT NULL,
-  CONSTRAINT UNI_PREV_ID UNIQUE (previousId),
-  PRIMARY KEY(sequenceId)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
+-- ----------------------------
+-- Table structure for asset_info
+-- ----------------------------
+DROP TABLE IF EXISTS `asset_info`;
+CREATE TABLE `asset_info` (
+                              `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '资产记录唯一标识',
+                              `user_id` BIGINT UNSIGNED NOT NULL COMMENT '用户唯一标识',
+                              `asset_type_id` BIGINT UNSIGNED NOT NULL COMMENT '资产类型标识',
+                              `available_balance` DECIMAL(36,18) NOT NULL DEFAULT '0.000000000000000000' COMMENT '可用余额',
+                              `frozen_balance` DECIMAL(36,18) NOT NULL DEFAULT '0.000000000000000000' COMMENT '冻结余额',
+                              `is_deleted` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '软删除标识：0=未删除，1=已删除',
+                              `version` BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '乐观锁版本号',
+                              `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+                              `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录更新时间',
+                              PRIMARY KEY (`id`),
+                              UNIQUE KEY `idx_user_asset` (`user_id`, `asset_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='资产详情表';
 
 
-CREATE TABLE hour_bars (
-  startTime BIGINT NOT NULL,
-  closePrice DECIMAL(36,18) NOT NULL,
-  highPrice DECIMAL(36,18) NOT NULL,
-  lowPrice DECIMAL(36,18) NOT NULL,
-  openPrice DECIMAL(36,18) NOT NULL,
-  quantity DECIMAL(36,18) NOT NULL,
-  PRIMARY KEY(startTime)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
+-- ----------------------------
+-- Table structure for asset_transaction
+-- ----------------------------
+DROP TABLE IF EXISTS `asset_transaction`;
+CREATE TABLE `asset_transaction` (
+                                     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '交易记录唯一标识',
+                                     `user_id` BIGINT UNSIGNED NOT NULL COMMENT '用户唯一标识',
+                                     `asset_type_id` BIGINT UNSIGNED NOT NULL COMMENT '资产类型标识',
+                                     `transaction_type` TINYINT UNSIGNED NOT NULL COMMENT '交易类型：1=充值，2=提现，3=冻结，4=解冻',
+                                     `amount` DECIMAL(36,18) NOT NULL COMMENT '交易金额（正为增加，负为减少）',
+                                     `available_balance_after` DECIMAL(36,18) NOT NULL COMMENT '交易后的可用余额',
+                                     `frozen_balance_after` DECIMAL(36,18) NOT NULL COMMENT '交易后的冻结余额',
+                                     `is_deleted` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '软删除标识：0=未删除，1=已删除',
+                                     `version` BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '乐观锁版本号',
+                                     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '交易时间',
+                                     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录更新时间',
+                                     PRIMARY KEY (`id`),
+                                     KEY `idx_user_transaction` (`user_id`, `asset_type_id`),
+                                     KEY `idx_transaction_type` (`transaction_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='资产交易记录表';
+
+-- ----------------------------
+-- Table structure for asset_type
+-- ----------------------------
+DROP TABLE IF EXISTS `asset_type`;
+CREATE TABLE `asset_type` (
+                              `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '资产类型唯一标识',
+                              `asset_name` VARCHAR(50) NOT NULL COMMENT '资产名称（如 Bitcoin）',
+                              `asset_symbol` VARCHAR(20) NOT NULL COMMENT '资产符号（如 BTC）',
+                              `asset_precision` TINYINT UNSIGNED NOT NULL DEFAULT '18' COMMENT '资产小数精度',
+                              `is_deleted` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '软删除标识：0=未删除，1=已删除',
+                              `version` BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '乐观锁版本号',
+                              `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+                              `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录更新时间',
+                              PRIMARY KEY (`id`),
+                              UNIQUE KEY `idx_asset_name` (`asset_name`),
+                              UNIQUE KEY `idx_asset_symbol` (`asset_symbol`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='资产类型表';
 
 
-CREATE TABLE match_details (
-  id BIGINT NOT NULL AUTO_INCREMENT,
-  counterOrderId BIGINT NOT NULL,
-  counterUserId BIGINT NOT NULL,
-  createdAt BIGINT NOT NULL,
-  direction VARCHAR(32) NOT NULL,
-  orderId BIGINT NOT NULL,
-  price DECIMAL(36,18) NOT NULL,
-  quantity DECIMAL(36,18) NOT NULL,
-  sequenceId BIGINT NOT NULL,
-  type VARCHAR(32) NOT NULL,
-  userId BIGINT NOT NULL,
-  CONSTRAINT UNI_OID_COID UNIQUE (orderId, counterOrderId),
-  INDEX IDX_OID_CT (orderId,createdAt),
-  PRIMARY KEY(id)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
+-- ----------------------------
+-- Table structure for order_info
+-- ----------------------------
+DROP TABLE IF EXISTS `order_info`;
+CREATE TABLE `order_info` (
+                              `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '订单唯一标识',
+                              `user_id` BIGINT UNSIGNED NOT NULL COMMENT '用户唯一标识',
+                              `sequence_id` BIGINT UNSIGNED NOT NULL COMMENT '定序ID',
+                              `order_direction` TINYINT UNSIGNED NOT NULL COMMENT '订单方向：0=买，1=卖',
+                              `order_price` DECIMAL(18,8) NOT NULL COMMENT '订单价格',
+                              `order_quantity` DECIMAL(18,8) NOT NULL COMMENT '订单总数量',
+                              `unfilled_quantity` DECIMAL(18,8) NOT NULL COMMENT '未成交数量',
+                              `order_status` TINYINT UNSIGNED NOT NULL COMMENT '订单状态：0=等待，1=部分成交，2=完全成交，3=已取消',
+                              `is_deleted` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '软删除标识：0=未删除，1=已删除',
+                              `version` BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '乐观锁版本号',
+                              `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                              `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                              PRIMARY KEY (`id`),
+                              KEY `idx_user_id` (`user_id`),
+                              KEY `idx_order_status` (`order_status`),
+                              KEY `idx_sequence_id` (`sequence_id`),
+                              KEY `idx_order_direction` (`order_direction`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='订单详情表';
 
-
-CREATE TABLE min_bars (
-  startTime BIGINT NOT NULL,
-  closePrice DECIMAL(36,18) NOT NULL,
-  highPrice DECIMAL(36,18) NOT NULL,
-  lowPrice DECIMAL(36,18) NOT NULL,
-  openPrice DECIMAL(36,18) NOT NULL,
-  quantity DECIMAL(36,18) NOT NULL,
-  PRIMARY KEY(startTime)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
-
-
-CREATE TABLE orders (
-  id BIGINT NOT NULL,
-  createdAt BIGINT NOT NULL,
-  direction VARCHAR(32) NOT NULL,
-  price DECIMAL(36,18) NOT NULL,
-  quantity DECIMAL(36,18) NOT NULL,
-  sequenceId BIGINT NOT NULL,
-  status VARCHAR(32) NOT NULL,
-  unfilledQuantity DECIMAL(36,18) NOT NULL,
-  updatedAt BIGINT NOT NULL,
-  userId BIGINT NOT NULL,
-  PRIMARY KEY(id)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
-
-
-CREATE TABLE password_auths (
-  userId BIGINT NOT NULL,
-  passwd VARCHAR(100) NOT NULL,
-  random VARCHAR(32) NOT NULL,
-  PRIMARY KEY(userId)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
-
-
-CREATE TABLE sec_bars (
-  startTime BIGINT NOT NULL,
-  closePrice DECIMAL(36,18) NOT NULL,
-  highPrice DECIMAL(36,18) NOT NULL,
-  lowPrice DECIMAL(36,18) NOT NULL,
-  openPrice DECIMAL(36,18) NOT NULL,
-  quantity DECIMAL(36,18) NOT NULL,
-  PRIMARY KEY(startTime)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
-
-
-CREATE TABLE ticks (
-  id BIGINT NOT NULL AUTO_INCREMENT,
-  createdAt BIGINT NOT NULL,
-  makerOrderId BIGINT NOT NULL,
-  price DECIMAL(36,18) NOT NULL,
-  quantity DECIMAL(36,18) NOT NULL,
-  sequenceId BIGINT NOT NULL,
-  takerDirection BIT NOT NULL,
-  takerOrderId BIGINT NOT NULL,
-  CONSTRAINT UNI_T_M UNIQUE (takerOrderId, makerOrderId),
-  INDEX IDX_CAT (createdAt),
-  PRIMARY KEY(id)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
-
-
-CREATE TABLE transfer_logs (
-  transferId VARCHAR(32) NOT NULL,
-  amount DECIMAL(36,18) NOT NULL,
-  asset VARCHAR(32) NOT NULL,
-  createdAt BIGINT NOT NULL,
-  status VARCHAR(32) NOT NULL,
-  type VARCHAR(32) NOT NULL,
-  userId BIGINT NOT NULL,
-  PRIMARY KEY(transferId)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
-
-
-CREATE TABLE unique_events (
-  uniqueId VARCHAR(50) NOT NULL,
-  createdAt BIGINT NOT NULL,
-  sequenceId BIGINT NOT NULL,
-  PRIMARY KEY(uniqueId)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
-
-
-CREATE TABLE user_profiles (
-  userId BIGINT NOT NULL,
-  createdAt BIGINT NOT NULL,
-  email VARCHAR(100) NOT NULL,
-  name VARCHAR(100) NOT NULL,
-  updatedAt BIGINT NOT NULL,
-  CONSTRAINT UNI_EMAIL UNIQUE (email),
-  PRIMARY KEY(userId)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
-
-
-CREATE TABLE users (
-  id BIGINT NOT NULL AUTO_INCREMENT,
-  createdAt BIGINT NOT NULL,
-  type VARCHAR(32) NOT NULL,
-  PRIMARY KEY(id)
-) CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT = 1000;
