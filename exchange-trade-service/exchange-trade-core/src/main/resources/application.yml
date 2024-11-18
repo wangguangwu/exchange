@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: exchange-asset-service
+    name: exchange-trade-service
   datasource:
     url: jdbc:mysql://localhost:3306/exchange?useUnicode=true&characterEncoding=utf8mb4&serverTimezone=UTC
     username: root

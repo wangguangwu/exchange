@@ -41,8 +41,8 @@ public class UserInfoDO implements Serializable {
     /**
      * 加密后的密码
      */
-    @TableField("password")
-    private String password;
+    @TableField("password_hash")
+    private String passwordHash;
 
     /**
      * 用户邮箱（可选）

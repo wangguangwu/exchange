@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
         UserInfoDO user = new UserInfoDO();
         user.setUsername(userDTO.getUsername());
-        user.setPassword(encryptPassword(userDTO.getPassword()));
+        user.setPasswordHash(encryptPassword(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
 
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
             throw new UserException("用户不存在: " + username);
         }
 
-        boolean isValid = validatePassword(password, user.getPassword());
+        boolean isValid = validatePassword(password, user.getPasswordHash());
         if (isValid) {
             log.info("用户登录成功: {}", username);
         } else {

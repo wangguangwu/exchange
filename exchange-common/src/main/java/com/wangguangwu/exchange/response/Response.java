@@ -76,13 +76,4 @@ public class Response<T> {
     public static <T> Response<T> error(ResponseEnum resultCodeEnum, T data) {
         return new Response<>(resultCodeEnum.getCode(), resultCodeEnum.getMessage(), data);
     }
-
-    /**
-     * 判断是否失败
-     *
-     * @return boolean
-     */
-    public boolean isFail() {
-        return ResponseEnum.SUCCESS.getCode() != this.getCode();
-    }
 }

@@ -1,9 +1,8 @@
 -- init exchange database
 
+SET NAMES utf8mb4;
 DROP DATABASE IF EXISTS exchangedb;
-
 CREATE DATABASE exchangedb;
-
 USE exchangedb;
 
 -- ----------------------------
