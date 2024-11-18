@@ -1,6 +1,6 @@
 package com.wangguangwu.exchange.service;
 
-import com.wangguangwu.exchange.entity.UserDO;
+import com.wangguangwu.exchange.entity.UserInfoDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author wangguangwu
  * @since 2024-11-15
  */
-public interface UserService extends IService<UserDO> {
+public interface UserInfoService extends IService<UserInfoDO> {
 
 }

@@ -17,7 +17,7 @@ import java.util.List;
 public interface UserController {
 
     /**
-     * 获取用户信息接口定义
+     * 获取用户信息
      *
      * @param uid 用户ID
      * @return 用户信息

@@ -1,6 +1,6 @@
 package com.wangguangwu.exchange.mapper;
 
-import com.wangguangwu.exchange.entity.UserDO;
+import com.wangguangwu.exchange.entity.UserInfoDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author wangguangwu
  * @since 2024-11-15
  */
-public interface UserMapper extends BaseMapper<UserDO> {
+public interface UserInfoMapper extends BaseMapper<UserInfoDO> {
 
 }

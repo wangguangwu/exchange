@@ -1,80 +1,67 @@
-package com.wangguangwu.exchangeusercore.service;
+package com.wangguangwu.exchangeusercore.service.impl;
 
+import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wangguangwu.exchange.dto.UserDTO;
 import com.wangguangwu.exchange.dto.UserPageQuery;
-import com.wangguangwu.exchange.entity.UserDO;
+import com.wangguangwu.exchange.entity.UserInfoDO;
 import com.wangguangwu.exchange.exception.UserException;
-import com.wangguangwu.exchange.service.UserService;
+import com.wangguangwu.exchange.service.UserInfoService;
+import com.wangguangwu.exchange.utils.MappingUtils;
+import com.wangguangwu.exchangeusercore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 用户服务核心业务实现
- *
  * @author wangguangwu
  */
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CustomUserService {
+public class UserServiceImpl implements UserService {
 
-    private final UserService userService;
+    private final UserInfoService userInfoService;
 
-    /**
-     * 根据用户 ID 获取用户信息
-     */
+    @Override
     public UserDTO getUserById(Long uid) {
-        log.info("开始获取用户信息，用户ID: {}", uid);
-        UserDO user = userService.getById(uid);
+        UserInfoDO user = userInfoService.getById(uid);
         if (user == null) {
-            log.warn("获取失败，用户ID: {} 不存在", uid);
             throw new UserException("用户不存在，用户ID: " + uid);
         }
-        log.info("成功获取用户信息: {}", user);
-        return mapToDTO(user);
+        return MappingUtils.map(user, UserDTO.class);
     }
 
-    /**
-     * 注册新用户
-     */
-    public boolean registerUser(UserDTO userDTO) {
-        log.info("开始注册用户: {}", userDTO.getUsername());
+    @Override
+    public void registerUser(UserDTO userDTO) {
         if (isUsernameExists(userDTO.getUsername())) {
-            log.warn("用户名已存在: {}", userDTO.getUsername());
             throw new UserException("用户名已存在: " + userDTO.getUsername());
         }
 
-        UserDO user = new UserDO();
+        UserInfoDO user = new UserInfoDO();
         user.setUsername(userDTO.getUsername());
         user.setPassword(encryptPassword(userDTO.getPassword()));
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
 
-        boolean success = userService.save(user);
+        boolean success = userInfoService.save(user);
         if (success) {
             log.info("用户注册成功: {}", userDTO.getUsername());
         } else {
             log.error("用户注册失败: {}", userDTO.getUsername());
             throw new UserException("用户注册失败: " + userDTO.getUsername());
         }
-        return success;
     }
 
-    /**
-     * 验证登录
-     */
-    public boolean validateLogin(String username, String password) {
+    @Override
+    public void validateLogin(String username, String password) {
         log.info("尝试登录，用户名: {}", username);
-        UserDO user = userService.getOne(new QueryWrapper<UserDO>().eq("username", username));
+        UserInfoDO user = userInfoService.getOne(new QueryWrapper<UserInfoDO>().eq("username", username));
         if (user == null) {
             log.warn("登录失败，用户不存在: {}", username);
             throw new UserException("用户不存在: " + username);
@@ -87,15 +74,12 @@ public class CustomUserService {
             log.warn("用户登录失败，密码错误: {}", username);
             throw new UserException("密码错误");
         }
-        return isValid;
     }
 
-    /**
-     * 更新用户信息
-     */
-    public boolean updateUser(UserDTO userDTO) {
+    @Override
+    public void updateUser(UserDTO userDTO) {
         log.info("开始更新用户信息，用户ID: {}", userDTO.getId());
-        UserDO user = userService.getById(userDTO.getId());
+        UserInfoDO user = userInfoService.getById(userDTO.getId());
         if (user == null) {
             log.warn("更新失败，用户不存在: {}", userDTO.getId());
             throw new UserException("用户不存在，用户ID: " + userDTO.getId());
@@ -103,76 +87,49 @@ public class CustomUserService {
 
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
-        boolean success = userService.updateById(user);
+        boolean success = userInfoService.updateById(user);
         if (success) {
             log.info("用户信息更新成功，用户ID: {}", userDTO.getId());
         } else {
             log.error("用户信息更新失败，用户ID: {}", userDTO.getId());
             throw new UserException("用户信息更新失败，用户ID: " + userDTO.getId());
         }
-        return success;
     }
 
-    /**
-     * 分页查询用户
-     *
-     * @param query 分页查询条件
-     * @return 用户DTO列表
-     */
+    @Override
     public List<UserDTO> listUsers(UserPageQuery query) {
         // 使用 LambdaQueryWrapper 构建查询条件
-        LambdaQueryWrapper<UserDO> wrapper = new LambdaQueryWrapper<>();
-        wrapper.like(query.getUsername() != null && !query.getUsername().isEmpty(), UserDO::getUsername, query.getUsername());
-        wrapper.like(query.getEmail() != null && !query.getEmail().isEmpty(), UserDO::getEmail, query.getEmail());
-        wrapper.like(query.getPhone() != null && !query.getPhone().isEmpty(), UserDO::getPhone, query.getPhone());
+        LambdaQueryWrapper<UserInfoDO> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(query.getUsername() != null && !query.getUsername().isEmpty(), UserInfoDO::getUsername, query.getUsername());
+        wrapper.like(query.getEmail() != null && !query.getEmail().isEmpty(), UserInfoDO::getEmail, query.getEmail());
+        wrapper.like(query.getPhone() != null && !query.getPhone().isEmpty(), UserInfoDO::getPhone, query.getPhone());
 
         // 分页查询
-        Page<UserDO> userPage = userService.page(new Page<>(query.getPage(), query.getSize()), wrapper);
+        Page<UserInfoDO> userPage = userInfoService.page(new Page<>(query.getPage(), query.getSize()), wrapper);
         List<UserDTO> userList = userPage.getRecords()
                 .stream()
-                .map(this::mapToDTO)
+                .map(data -> MappingUtils.map(data, UserDTO.class))
                 .collect(Collectors.toList());
 
         log.info("分页查询完成，查询到用户数量: {}", userList.size());
         return userList;
     }
 
-    /**
-     * 检查用户名是否已存在
-     */
     private boolean isUsernameExists(String username) {
-        boolean exists = userService.count(new QueryWrapper<UserDO>().eq("username", username)) > 0;
+        boolean exists = userInfoService.count(new LambdaQueryWrapper<UserInfoDO>().eq(UserInfoDO::getUsername, username)) > 0;
         if (exists) {
             log.info("用户名已存在: {}", username);
         }
         return exists;
     }
 
-    /**
-     * 加密密码
-     */
     private String encryptPassword(String rawPassword) {
         log.debug("开始加密密码");
         return BCrypt.hashpw(rawPassword, BCrypt.gensalt());
     }
 
-    /**
-     * 校验密码
-     */
     private boolean validatePassword(String rawPassword, String encodedPassword) {
         log.debug("校验密码");
         return BCrypt.checkpw(rawPassword, encodedPassword);
-    }
-
-    /**
-     * 映射 UserDO 到 UserDTO
-     */
-    private UserDTO mapToDTO(UserDO user) {
-        if (user == null) {
-            return null;
-        }
-        UserDTO dto = new UserDTO();
-        BeanUtils.copyProperties(user, dto);
-        return dto;
     }
 }

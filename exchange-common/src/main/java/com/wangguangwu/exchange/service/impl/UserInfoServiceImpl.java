@@ -1,8 +1,8 @@
 package com.wangguangwu.exchange.service.impl;
 
-import com.wangguangwu.exchange.entity.UserDO;
-import com.wangguangwu.exchange.mapper.UserMapper;
-import com.wangguangwu.exchange.service.UserService;
+import com.wangguangwu.exchange.entity.UserInfoDO;
+import com.wangguangwu.exchange.mapper.UserInfoMapper;
+import com.wangguangwu.exchange.service.UserInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2024-11-15
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements UserService {
+public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfoDO> implements UserInfoService {
 
 }
