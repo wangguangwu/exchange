@@ -76,4 +76,8 @@ public class Response<T> {
     public static <T> Response<T> error(ResponseEnum resultCodeEnum, T data) {
         return new Response<>(resultCodeEnum.getCode(), resultCodeEnum.getMessage(), data);
     }
+
+    public static <T> Response<T> error(String message, T data) {
+        return new Response<>(ResponseEnum.FAIL.getCode(), message, data);
+    }
 }

@@ -15,7 +15,6 @@ CREATE TABLE `user_info` (
                              `password_hash` VARCHAR(255) NOT NULL COMMENT '加密后的密码',
                              `email` VARCHAR(100) DEFAULT NULL COMMENT '用户邮箱（可选）',
                              `phone` VARCHAR(20) DEFAULT NULL COMMENT '用户手机号（可选）',
-                             `last_login` DATETIME DEFAULT NULL COMMENT '最近登录时间',
                              `is_deleted` TINYINT(1) NOT NULL DEFAULT '0' COMMENT '软删除标识：0=未删除，1=已删除',
                              `version` BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '乐观锁版本号',
                              `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户创建时间',
@@ -23,6 +22,28 @@ CREATE TABLE `user_info` (
                              PRIMARY KEY (`id`),
                              UNIQUE KEY `idx_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户详情表';
+
+-- ----------------------------
+-- Table structure for user_login_record
+-- ----------------------------
+CREATE TABLE `user_login_record` (
+                                     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '登录记录唯一标识',
+                                     `user_id` BIGINT UNSIGNED NOT NULL COMMENT '用户唯一标识',
+                                     `user_name` VARCHAR(100) NOT NULL COMMENT '用户名',
+                                     `login_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '登录时间',
+                                     `login_ip` VARCHAR(45) DEFAULT NULL COMMENT '登录IP地址（支持IPv6）',
+                                     `device` VARCHAR(255) DEFAULT NULL COMMENT '登录设备信息（如浏览器类型或设备名称）',
+                                     `is_successful` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '登录是否成功：0=失败，1=成功',
+                                     `remark` VARCHAR(500) DEFAULT NULL COMMENT '备注信息（失败原因或其他信息）',
+                                     `version` BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '乐观锁版本号',
+                                     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+                                     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录更新时间',
+                                     `is_deleted` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '软删除标识：0=未删除，1=已删除',
+                                     PRIMARY KEY (`id`),
+                                     KEY `idx_user_id` (`user_id`),
+                                     KEY `idx_login_time` (`login_time`),
+                                     KEY `idx_is_successful` (`is_successful`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户登录记录表';
 
 -- ----------------------------
 -- Table structure for asset_info

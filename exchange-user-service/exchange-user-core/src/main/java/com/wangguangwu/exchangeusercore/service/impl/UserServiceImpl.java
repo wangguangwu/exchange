@@ -1,5 +1,6 @@
 package com.wangguangwu.exchangeusercore.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -7,14 +8,17 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wangguangwu.exchange.dto.UserDTO;
 import com.wangguangwu.exchange.dto.UserPageQuery;
 import com.wangguangwu.exchange.entity.UserInfoDO;
+import com.wangguangwu.exchange.entity.UserLoginRecordDO;
 import com.wangguangwu.exchange.exception.UserException;
 import com.wangguangwu.exchange.service.UserInfoService;
+import com.wangguangwu.exchange.service.UserLoginRecordService;
 import com.wangguangwu.exchange.utils.MappingUtils;
 import com.wangguangwu.exchangeusercore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +31,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserInfoService userInfoService;
+    private final UserLoginRecordService userLoginRecordService;
 
     @Override
     public UserDTO getUserById(Long uid) {
@@ -59,21 +64,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void validateLogin(String username, String password) {
-        log.info("尝试登录，用户名: {}", username);
+    public String validateAndLogLogin(String username, String password, String ipAddress, String deviceInfo) {
+        log.info("尝试登录，用户名: {}, IP: {}, 设备信息: {}", username, ipAddress, deviceInfo);
+
+        // 查询用户信息
         UserInfoDO user = userInfoService.getOne(new QueryWrapper<UserInfoDO>().eq("username", username));
+        // 用户不存在不用记录原因
         if (user == null) {
-            log.warn("登录失败，用户不存在: {}", username);
-            throw new UserException("用户不存在: " + username);
+            log.warn("登录失败，用户不存在: {}, IP: {}, 设备信息: {}", username, ipAddress, deviceInfo);
+            return "用户不存在";
         }
 
-        boolean isValid = validatePassword(password, user.getPasswordHash());
-        if (isValid) {
-            log.info("用户登录成功: {}", username);
-        } else {
-            log.warn("用户登录失败，密码错误: {}", username);
-            throw new UserException("密码错误");
+        // 验证用户信息
+        String errorMsg = validateUserCredentials(user, password, username, ipAddress, deviceInfo);
+
+        // 是否验证成功
+        boolean isSuccess = StrUtil.isBlank(errorMsg);
+
+        // 构造登录记录
+        UserLoginRecordDO loginRecord = buildLoginRecord(user, isSuccess, ipAddress, deviceInfo, errorMsg);
+
+        // 保存登录记录
+        userLoginRecordService.save(loginRecord);
+
+        if (!isSuccess) {
+            log.warn("登录失败原因: {}", errorMsg);
         }
+
+        return errorMsg;
     }
 
     @Override
@@ -87,6 +105,7 @@ public class UserServiceImpl implements UserService {
 
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
+        user.setPasswordHash(encryptPassword(userDTO.getPassword()));
         boolean success = userInfoService.updateById(user);
         if (success) {
             log.info("用户信息更新成功，用户ID: {}", userDTO.getId());
@@ -115,6 +134,8 @@ public class UserServiceImpl implements UserService {
         return userList;
     }
 
+    //=================================================私有方法============================================================
+
     private boolean isUsernameExists(String username) {
         boolean exists = userInfoService.count(new LambdaQueryWrapper<UserInfoDO>().eq(UserInfoDO::getUsername, username)) > 0;
         if (exists) {
@@ -131,5 +152,49 @@ public class UserServiceImpl implements UserService {
     private boolean validatePassword(String rawPassword, String encodedPassword) {
         log.debug("校验密码");
         return BCrypt.checkpw(rawPassword, encodedPassword);
+    }
+
+    /**
+     * 验证用户凭据
+     *
+     * @param user       用户信息
+     * @param password   输入的密码
+     * @param username   用户名
+     * @param ipAddress  IP 地址
+     * @param deviceInfo 设备信息
+     * @return 错误信息，如果验证成功返回 null
+     */
+    private String validateUserCredentials(UserInfoDO user, String password, String username, String ipAddress, String deviceInfo) {
+        if (!validatePassword(password, user.getPasswordHash())) {
+            log.warn("登录失败，密码错误: {}, IP: {}, 设备信息: {}", username, ipAddress, deviceInfo);
+            return "密码错误";
+        }
+
+        log.info("用户验证成功: {}, IP: {}, 设备信息: {}", username, ipAddress, deviceInfo);
+        // 验证成功
+        return null;
+    }
+
+    /**
+     * 构造登录记录
+     *
+     * @param user       用户信息
+     * @param isSuccess  是否登录成功
+     * @param ipAddress  IP 地址
+     * @param deviceInfo 设备信息
+     * @param errorMsg   错误信息
+     * @return 构造好的登录记录对象
+     */
+    private UserLoginRecordDO buildLoginRecord(UserInfoDO user, boolean isSuccess, String ipAddress, String deviceInfo, String errorMsg) {
+        UserLoginRecordDO loginRecord = new UserLoginRecordDO();
+        loginRecord.setUserId(user.getId());
+        loginRecord.setUserName(user.getUsername());
+        loginRecord.setLoginTime(LocalDateTime.now());
+        loginRecord.setLoginIp(ipAddress);
+        loginRecord.setDevice(deviceInfo);
+        loginRecord.setIsSuccessful(isSuccess);
+        loginRecord.setRemark(errorMsg);
+        loginRecord.setIsDeleted(false);
+        return loginRecord;
     }
 }

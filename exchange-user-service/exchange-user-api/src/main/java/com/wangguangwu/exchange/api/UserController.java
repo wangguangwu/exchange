@@ -3,6 +3,7 @@ package com.wangguangwu.exchange.api;
 import com.wangguangwu.exchange.dto.UserDTO;
 import com.wangguangwu.exchange.dto.UserPageQuery;
 import com.wangguangwu.exchange.response.Response;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,10 +40,13 @@ public interface UserController {
      *
      * @param username 用户名
      * @param password 密码
+     * @param request  请求
      * @return 登录结果
      */
     @PostMapping("/login")
-    Response<String> login(@RequestParam("username") String username, @RequestParam("password") String password);
+    Response<String> login(@RequestParam("username") String username,
+                           @RequestParam("password") String password,
+                           HttpServletRequest request);
 
     /**
      * 更新用户信息
@@ -50,7 +54,7 @@ public interface UserController {
      * @param userDTO 用户数据传输对象
      * @return 更新结果
      */
-    @PutMapping("/update")
+    @PostMapping("/update")
     Response<String> updateUser(@Validated(UserDTO.Update.class) @RequestBody UserDTO userDTO);
 
     /**

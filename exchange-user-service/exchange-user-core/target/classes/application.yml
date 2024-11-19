@@ -32,3 +32,9 @@ mybatis-plus:
       logic-delete-field: is_deleted
       logic-delete-value: "1"
       logic-not-delete-value: "0"
+
+jwt:
+  # Base64 编码的密钥
+  secret: zKJ4dH9ajkF3k8QdL7mUq6P4xH3mVb9zF9sTxJ4vLm0=
+  # Token 有效期（毫秒），1小时
+  expiration: 3600000

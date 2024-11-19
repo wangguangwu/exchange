@@ -38,7 +38,7 @@ public class CodeGenerator {
      */
     private static final String URL_PATH = "jdbc:mysql://127.0.0.1:3306/exchangedb?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&useSSL=false";
     private static final String USER_NAME = "root";
-    private static final String PASSWORD = "password";
+    private static final String PASSWORD = "123456";
 
     public static void main(String[] args) {
         create();
@@ -46,7 +46,7 @@ public class CodeGenerator {
 
     private static void create() {
         // 创建的表名
-        String tableName = "orders";
+        String tableName = "user_login_record";
 
         // 生成文件
         FastAutoGenerator.create(URL_PATH, USER_NAME, PASSWORD)

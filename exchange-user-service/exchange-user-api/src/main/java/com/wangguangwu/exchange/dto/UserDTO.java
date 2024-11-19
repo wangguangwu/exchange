@@ -57,12 +57,6 @@ public class UserDTO {
     private String phone;
 
     /**
-     * 最近登录时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime lastLogin;
-
-    /**
      * 用户创建时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")

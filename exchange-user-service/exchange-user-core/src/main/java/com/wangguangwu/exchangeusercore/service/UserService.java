@@ -23,7 +23,7 @@ public interface UserService {
     /**
      * 验证登录
      */
-    void validateLogin(String username, String password);
+    String validateAndLogLogin(String username, String password, String ipAddress, String deviceInfo);
 
     /**
      * 更新用户信息

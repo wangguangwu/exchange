@@ -1,11 +1,15 @@
 package com.wangguangwu.exchangeusercore.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.wangguangwu.exchange.api.UserController;
 import com.wangguangwu.exchange.dto.UserDTO;
 import com.wangguangwu.exchange.dto.UserPageQuery;
 import com.wangguangwu.exchange.response.Response;
+import com.wangguangwu.exchange.utils.IpUtil;
 import com.wangguangwu.exchangeusercore.service.UserService;
+import com.wangguangwu.exchangeusercore.util.JwtTokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +27,7 @@ import java.util.List;
 public class UserControllerImpl implements UserController {
 
     private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public Response<UserDTO> getUser(Long uid) {
@@ -51,15 +56,32 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public Response<String> login(String username, String password) {
+    public Response<String> login(String username, String password, HttpServletRequest request) {
+        // 获取客户端 IP 地址和设备信息
+        String ipAddress = IpUtil.getClientIp(request);
+        String deviceInfo = request.getHeader("User-Agent");
+
+        log.info("用户登录请求，用户名: {}, IP: {}, 设备信息: {}", username, ipAddress, deviceInfo);
+
         try {
-            log.info("用户登录请求，用户名: {}", username);
-            userService.validateLogin(username, password);
-            log.info("用户登录成功，用户名: {}", username);
-            return Response.success("登录成功");
+            // 验证用户名和密码并记录登录信息
+            String validationError = userService.validateAndLogLogin(username, password, ipAddress, deviceInfo);
+
+            // 如果验证失败，返回错误响应
+            if (StrUtil.isNotBlank(validationError)) {
+                log.warn("用户登录失败，用户名: {}, IP: {}, 错误信息: {}", username, ipAddress, validationError);
+                return Response.error(validationError);
+            }
+
+            // 验证成功，生成并返回 Token
+            String token = jwtTokenProvider.generateToken(username);
+            log.info("用户登录成功，用户名: {}, IP: {}, 设备信息: {}", username, ipAddress, deviceInfo);
+            return Response.success(token);
+
         } catch (Exception e) {
-            log.error("用户登录失败，用户名: {}, 错误信息: {}", username, e.getMessage(), e);
-            return Response.error("登录失败: " + e.getMessage());
+            // 捕获所有系统异常，记录日志并返回错误响应
+            log.error("用户登录失败（系统异常），用户名: {}, IP: {}, 错误信息: {}", username, ipAddress, e.getMessage(), e);
+            return Response.error("系统异常，请稍后重试");
         }
     }
 

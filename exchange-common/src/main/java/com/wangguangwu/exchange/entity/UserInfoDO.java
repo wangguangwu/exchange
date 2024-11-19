@@ -57,12 +57,6 @@ public class UserInfoDO implements Serializable {
     private String phone;
 
     /**
-     * 最近登录时间
-     */
-    @TableField("last_login")
-    private LocalDateTime lastLogin;
-
-    /**
      * 软删除标识：0=未删除，1=已删除
      */
     @TableField("is_deleted")
