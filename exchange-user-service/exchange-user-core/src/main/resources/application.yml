@@ -13,3 +13,22 @@ spring:
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+
+# MyBatis-Plus config
+mybatis-plus:
+  type-aliases-package: com.wangguangwu.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  mapper-locations: "classpath*:mapper/*.xml"
+  global-config:
+    db-config:
+      logic-delete-field: is_deleted
+      logic-delete-value: "1"
+      logic-not-delete-value: "0"
