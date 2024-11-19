@@ -1,6 +1,6 @@
 package com.wangguangwu.exchangeusercore.controller;
 
-import com.alibaba.fastjson2.JSON;
+import cn.hutool.json.JSONUtil;
 import com.wangguangwu.exchange.api.UserController;
 import com.wangguangwu.exchange.dto.UserDTO;
 import com.wangguangwu.exchange.dto.UserPageQuery;
@@ -29,7 +29,7 @@ public class UserControllerImpl implements UserController {
         try {
             log.info("开始获取用户信息，用户ID: {}", uid);
             UserDTO user = userService.getUserById(uid);
-            log.debug("成功获取用户信息: {}", JSON.toJSONString(user));
+            log.debug("成功获取用户信息: {}", JSONUtil.toJsonStr(user));
             return Response.success(user);
         } catch (Exception e) {
             log.error("获取用户信息失败，用户ID: {}, 错误信息: {}", uid, e.getMessage(), e);
@@ -79,11 +79,11 @@ public class UserControllerImpl implements UserController {
     @Override
     public Response<List<UserDTO>> listUsers(UserPageQuery query) {
         try {
-            log.info("查询用户列表，查询条件: {}", JSON.toJSON(query));
+            log.info("查询用户列表，查询条件: {}", JSONUtil.toJsonStr(query));
             List<UserDTO> users = userService.listUsers(query);
             return Response.success(users);
         } catch (Exception e) {
-            log.error("查询用户列表失败，查询条件: {}, 错误信息: {}", JSON.toJSON(query), e.getMessage(), e);
+            log.error("查询用户列表失败，查询条件: {}, 错误信息: {}", JSONUtil.toJsonStr(query), e.getMessage(), e);
             return Response.error("查询用户列表失败: " + e.getMessage());
         }
     }

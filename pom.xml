@@ -32,9 +32,12 @@
         <mysql.version>8.0.32</mysql.version>
         <freemarker.version>2.3.31</freemarker.version>
         <fastJson2.version>2.0.52</fastJson2.version>
+        <jackson.version>2.18.1</jackson.version>
         <aspect.version>1.9.6</aspect.version>
         <jackson-annotations.version>2.3.3</jackson-annotations.version>
         <spring-cloud-starter-bootstrap.version>4.1.2</spring-cloud-starter-bootstrap.version>
+        <hutool.version>5.8.32</hutool.version>
+        <fastjson.version>2.0.53</fastjson.version>
     </properties>
 
     <dependencyManagement>
