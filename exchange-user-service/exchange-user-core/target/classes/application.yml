@@ -5,7 +5,7 @@ spring:
   application:
     name: exchange-user-service
   profiles:
-    active: prod
+    active: dev
 
   datasource:
     url: jdbc:mysql://localhost:3306/exchangedb?useUnicode=true&serverTimezone=UTC
