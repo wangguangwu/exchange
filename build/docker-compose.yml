@@ -1,7 +1,7 @@
 version: "3.8"
 services:
 
-  # http://localhost:3306
+  # MySQL 服务
   mysql:
     image: mysql:8.0
     container_name: mysql
@@ -15,11 +15,13 @@ services:
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
     volumes:
+      # 初始化 SQL 脚本（只读）
       - ./sql/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql:ro
+      # 持久化 MySQL 数据
       - ./docker/mysql-data:/var/lib/mysql
     restart: always
 
-  # http://localhost:8848/nacos
+  # Nacos 服务
   nacos:
     image: nacos/nacos-server:latest
     container_name: nacos
@@ -28,17 +30,26 @@ services:
       - "9848:9848"
       - "9849:9849"
     environment:
+      # 配置 Nacos 为单机模式
       - MODE=standalone
+      # 开启 Nacos 权限认证
       - NACOS_AUTH_ENABLE=true
+      # 设置认证 Token（需要加密）
       - NACOS_AUTH_TOKEN=VGhpc0lzTXlDdXN0b21TZWNyZXRLZXkwMTIzNDU2Nzg=
       - NACOS_AUTH_IDENTITY_KEY=nacos
       - NACOS_AUTH_IDENTITY_VALUE=nacos
+      # JVM 配置
       - JVM_XMS=512m
       - JVM_XMX=512m
       - JVM_XMN=256m
+      # 其他参数
       - NACOS_SERVERS=nacos
       - PREFER_HOST_MODE=hostname
     volumes:
-      - ".docker/nacos/logs:/home/nacos/logs"
-      - ".docker/nacos/init.d/custom.properties:/home/nacos/init.d/custom.properties"
+      # 持久化日志数据
+      - ./docker/nacos/logs:/home/nacos/logs
+      # 自定义 Nacos 配置文件
+      - ./docker/nacos/init.d/custom.properties:/home/nacos/init.d/custom.properties
+      # 数据持久化目录（可选）
+      - ./docker/nacos/data:/home/nacos/data
     restart: always
