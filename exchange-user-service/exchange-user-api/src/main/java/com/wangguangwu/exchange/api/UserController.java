@@ -7,9 +7,7 @@ import com.wangguangwu.exchange.request.UpdatePasswordRequest;
 import com.wangguangwu.exchange.response.Response;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用户服务 API 接口定义
@@ -63,5 +61,14 @@ public interface UserController {
      */
     @PostMapping("/updatePassword")
     Response<Void> updatePassword(@Validated @RequestBody UpdatePasswordRequest request);
+
+    /**
+     * 校验 token
+     *
+     * @param authorizationHeader 包含 Token 的 Authorization Header
+     * @return void
+     */
+    @GetMapping("/validateToken")
+    Response<Void> validateToken(@RequestHeader("Authorization") String authorizationHeader);
 
 }

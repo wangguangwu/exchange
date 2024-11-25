@@ -1,7 +1,6 @@
 package com.wangguangwu.exchangeusercore.util;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -52,5 +51,40 @@ public class JwtTokenProvider {
                 .setExpiration(validity)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    /**
+     * 验证和解析 JWT Token
+     *
+     * @param token JWT Token
+     * @return 解析后的 Claims 对象，包含 Token 的有效信息
+     * @throws JwtException 如果 Token 无效或解析失败
+     */
+    public Claims validateToken(String token) {
+        try {
+            // 解析 Token
+            return Jwts.parserBuilder()
+                    // 设置密钥
+                    .setSigningKey(key)
+                    .build()
+                    // 验证签名并解析
+                    .parseClaimsJws(token)
+                    // 获取解析后的 Claims 对象
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            throw new JwtException("Token 已过期", e);
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new JwtException("Token 无效", e);
+        }
+    }
+
+    /**
+     * 判断 Token 是否过期
+     *
+     * @param claims 已解析的 Token Claims
+     * @return true 表示已过期，false 表示未过期
+     */
+    public boolean isTokenExpired(Claims claims) {
+        return claims.getExpiration().before(new Date());
     }
 }
