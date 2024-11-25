@@ -1,4 +1,4 @@
-package com.wangguangwu.exchangeusercore.builder;
+package com.wangguangwu.exchange.builder;
 
 import cn.hutool.core.util.StrUtil;
 import com.wangguangwu.exchange.entity.UserInfoDO;
@@ -9,7 +9,10 @@ import java.time.LocalDateTime;
 /**
  * @author wangguangwu
  */
-public class UserLoginRecordDOBuilder {
+public final class UserLoginRecordDOBuilder {
+
+    private UserLoginRecordDOBuilder() {
+    }
 
     /**
      * 构造登录记录

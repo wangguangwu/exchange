@@ -1,8 +1,9 @@
 package com.wangguangwu.exchangeusercore.controller;
 
 import com.wangguangwu.exchange.api.UserController;
-import com.wangguangwu.exchange.dto.UserDTO;
+import com.wangguangwu.exchange.controller.BaseController;
 import com.wangguangwu.exchange.request.LoginRequest;
+import com.wangguangwu.exchange.request.RegisterRequest;
 import com.wangguangwu.exchange.request.ResetPasswordRequest;
 import com.wangguangwu.exchange.request.UpdatePasswordRequest;
 import com.wangguangwu.exchange.response.Response;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class UserControllerImpl implements UserController {
+public class UserControllerImpl extends BaseController implements UserController {
 
     private final UserService userService;
     private final LoginService loginService;
@@ -29,56 +30,39 @@ public class UserControllerImpl implements UserController {
     @Override
     public Response<String> login(LoginRequest request, HttpServletRequest servletRequest) {
         String username = request.getUsername();
-        try {
-            log.info("用户[{}]开始登录", username);
-            String token = loginService.login(request, servletRequest);
-            log.info("用户[{}]登录成功", username);
-            return Response.success(token);
-        } catch (Exception e) {
-            // 捕获所有系统异常，记录日志并返回错误响应
-            log.error("用户[{}]登录失败， 错误信息: {}", username, e.getMessage(), e);
-            return Response.error(e.getMessage());
-        }
+        return execute(() -> {
+            log.info("用户[{}]尝试登录", username);
+            return loginService.login(request, servletRequest);
+        }, "用户登录");
     }
 
     @Override
-    public Response<Void> register(UserDTO userDTO) {
-        try {
-            log.info("开始注册用户，用户名: {}", userDTO.getUsername());
-            userService.registerUser(userDTO);
-            log.info("用户注册成功，用户名: {}", userDTO.getUsername());
-            return Response.success();
-        } catch (Exception e) {
-            log.error("用户注册失败，用户名: {}, 错误信息: {}", userDTO.getUsername(), e.getMessage(), e);
-            return Response.error(e.getMessage());
-        }
-    }
-
-
-    @Override
-    public Response<Void> updatePassword(UpdatePasswordRequest request) {
+    public Response<Void> register(RegisterRequest request) {
         String username = request.getUsername();
-        try {
-            log.info("开始更新用户信息，用户名: {}", username);
-            userService.updateUser(request);
-            log.info("用户信息更新成功，用户ID: {}", username);
-            return Response.success();
-        } catch (Exception e) {
-            log.error("更新用户信息失败，用户名: {}, 错误信息: {}", username, e.getMessage(), e);
-            return Response.error(e.getMessage());
-        }
+        return execute(() -> {
+            log.info("用户[{}]尝试注册", username);
+            userService.registerUser(request);
+            return null;
+        }, "用户注册");
     }
 
     @Override
     public Response<Void> resetPassword(ResetPasswordRequest request) {
         String username = request.getUsername();
-        try {
-            log.info("开始找回密码操作，用户名: {}", username);
+        return execute(() -> {
+            log.info("用户[{}]尝试找回密码", username);
             userService.resetPassword(request);
-            return Response.success();
-        } catch (Exception e) {
-            log.error("找回密码操作失败，用户名: {}, 错误信息: {}", username, e.getMessage(), e);
-            return Response.error(e.getMessage());
-        }
+            return null;
+        }, "找回密码");
+    }
+
+    @Override
+    public Response<Void> updatePassword(UpdatePasswordRequest request) {
+        String username = request.getUsername();
+        return execute(() -> {
+            log.info("用户[{}]尝试更新密码", username);
+            userService.updatePassword(request);
+            return null;
+        }, "更新密码");
     }
 }

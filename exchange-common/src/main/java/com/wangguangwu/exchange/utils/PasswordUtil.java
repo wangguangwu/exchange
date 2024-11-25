@@ -13,4 +13,8 @@ public final class PasswordUtil {
     public static boolean validatePassword(String rawPassword, String encodedPassword) {
         return BCrypt.checkpw(rawPassword, encodedPassword);
     }
+
+    public static String encryptPassword(String rawPassword) {
+        return BCrypt.hashpw(rawPassword, BCrypt.gensalt());
+    }
 }

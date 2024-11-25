@@ -1,6 +1,6 @@
 package com.wangguangwu.exchangeusercore.service;
 
-import com.wangguangwu.exchange.dto.UserDTO;
+import com.wangguangwu.exchange.request.RegisterRequest;
 import com.wangguangwu.exchange.request.ResetPasswordRequest;
 import com.wangguangwu.exchange.request.UpdatePasswordRequest;
 
@@ -12,12 +12,12 @@ public interface UserService {
     /**
      * 注册新用户
      */
-    void registerUser(UserDTO userDTO);
+    void registerUser(RegisterRequest request);
 
     /**
      * 更新用户信息
      */
-    void updateUser(UpdatePasswordRequest request);
+    void updatePassword(UpdatePasswordRequest request);
 
     /**
      * 找回密码
@@ -25,6 +25,5 @@ public interface UserService {
      * @param request request
      */
     void resetPassword(ResetPasswordRequest request);
-
 
 }

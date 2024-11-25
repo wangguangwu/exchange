@@ -10,7 +10,7 @@ import com.wangguangwu.exchange.service.UserInfoService;
 import com.wangguangwu.exchange.service.UserLoginRecordService;
 import com.wangguangwu.exchange.utils.IpUtil;
 import com.wangguangwu.exchange.utils.PasswordUtil;
-import com.wangguangwu.exchangeusercore.builder.UserLoginRecordDOBuilder;
+import com.wangguangwu.exchange.builder.UserLoginRecordDOBuilder;
 import com.wangguangwu.exchangeusercore.service.LoginService;
 import com.wangguangwu.exchangeusercore.util.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,7 +47,11 @@ public class LoginServiceImpl implements LoginService {
         UserInfoDO user = userInfoService.getOne(new LambdaQueryWrapper<UserInfoDO>()
                 .eq(UserInfoDO::getUsername, username));
 
-        // 验证用户名和密码
+        if (user == null) {
+            throw new UserException("用户不存在");
+        }
+
+        // 验证密码
         String errorMsg = validateUserCredentials(user, password);
 
         // 构造登录记录
@@ -77,9 +81,6 @@ public class LoginServiceImpl implements LoginService {
      * @return 错误信息（如果验证失败）
      */
     private String validateUserCredentials(UserInfoDO user, String password) {
-        if (user == null) {
-            return "用户不存在";
-        }
         if (!PasswordUtil.validatePassword(password, user.getPasswordHash())) {
             return "密码错误";
         }
