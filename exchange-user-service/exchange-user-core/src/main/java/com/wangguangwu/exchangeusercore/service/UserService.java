@@ -1,9 +1,8 @@
 package com.wangguangwu.exchangeusercore.service;
 
 import com.wangguangwu.exchange.dto.UserDTO;
-import com.wangguangwu.exchange.dto.UserPageQuery;
-
-import java.util.List;
+import com.wangguangwu.exchange.request.ResetPasswordRequest;
+import com.wangguangwu.exchange.request.UpdatePasswordRequest;
 
 /**
  * @author wangguangwu
@@ -11,27 +10,21 @@ import java.util.List;
 public interface UserService {
 
     /**
-     * 根据用户 ID 获取用户信息
-     */
-    UserDTO getUserById(Long uid);
-
-    /**
      * 注册新用户
      */
     void registerUser(UserDTO userDTO);
 
     /**
-     * 验证登录
-     */
-    String validateAndLogLogin(String username, String password, String ipAddress, String deviceInfo);
-
-    /**
      * 更新用户信息
      */
-    void updateUser(UserDTO userDTO);
+    void updateUser(UpdatePasswordRequest request);
 
     /**
-     * 分页查询用户
+     * 找回密码
+     *
+     * @param request request
      */
-    List<UserDTO> listUsers(UserPageQuery query);
+    void resetPassword(ResetPasswordRequest request);
+
+
 }

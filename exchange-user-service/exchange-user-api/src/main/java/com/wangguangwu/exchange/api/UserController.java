@@ -1,13 +1,13 @@
 package com.wangguangwu.exchange.api;
 
 import com.wangguangwu.exchange.dto.UserDTO;
-import com.wangguangwu.exchange.dto.UserPageQuery;
+import com.wangguangwu.exchange.request.LoginRequest;
+import com.wangguangwu.exchange.request.ResetPasswordRequest;
+import com.wangguangwu.exchange.request.UpdatePasswordRequest;
 import com.wangguangwu.exchange.response.Response;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * 用户服务 API 接口定义
@@ -15,53 +15,42 @@ import java.util.List;
  * @author wangguangwu
  */
 @RequestMapping("/user")
+@CrossOrigin(origins = "*", allowCredentials = "true")
 public interface UserController {
 
     /**
-     * 获取用户信息
+     * 用户登录
      *
-     * @param uid 用户ID
-     * @return 用户信息
+     * @param request        登录
+     * @param servletRequest 请求
+     * @return token
      */
-    @GetMapping("/get/{uid}")
-    Response<UserDTO> getUser(@PathVariable("uid") Long uid);
+    @PostMapping("/login")
+    Response<String> login(@Validated @RequestBody LoginRequest request, HttpServletRequest servletRequest);
 
     /**
      * 注册新用户
      *
      * @param userDTO 用户数据传输对象
-     * @return 用户ID
      */
     @PostMapping("/register")
-    Response<String> register(@Validated(UserDTO.Create.class) @RequestBody UserDTO userDTO);
+    Response<Void> register(@Validated(UserDTO.Create.class) @RequestBody UserDTO userDTO);
 
     /**
-     * 用户登录
+     * 找回密码
      *
-     * @param username 用户名
-     * @param password 密码
-     * @param request  请求
-     * @return 登录结果
+     * @param request 包含用户名和新密码的请求体
+     * @return 响应结果
      */
-    @PostMapping("/login")
-    Response<String> login(@RequestParam("username") String username,
-                           @RequestParam("password") String password,
-                           HttpServletRequest request);
+    @PostMapping("/resetPassword")
+    Response<Void> resetPassword(@Validated @RequestBody ResetPasswordRequest request);
 
     /**
-     * 更新用户信息
+     * 更新密码
      *
-     * @param userDTO 用户数据传输对象
-     * @return 更新结果
+     * @param request request
      */
-    @PostMapping("/update")
-    Response<String> updateUser(@Validated(UserDTO.Update.class) @RequestBody UserDTO userDTO);
+    @PostMapping("/updatePassword")
+    Response<Void> updatePassword(@Validated @RequestBody UpdatePasswordRequest request);
 
-    /**
-     * 分页查询用户
-     *
-     * @param query@return 用户列表
-     */
-    @GetMapping("/list")
-    Response<List<UserDTO>> listUsers(@Validated UserPageQuery query);
 }

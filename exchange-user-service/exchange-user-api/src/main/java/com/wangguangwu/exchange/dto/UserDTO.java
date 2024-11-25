@@ -1,7 +1,6 @@
 package com.wangguangwu.exchange.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -42,19 +41,8 @@ public class UserDTO {
      * 加密后的密码
      */
     @NotBlank(groups = Create.class, message = "创建用户时，密码不能为空")
-    @Size(min = 8, max = 20, groups = {Create.class, Update.class}, message = "密码长度必须在8到20字符之间")
+    @Size(min = 6, max = 20, groups = {Create.class, Update.class}, message = "密码长度必须在6到20字符之间")
     private String password;
-
-    /**
-     * 用户邮箱（可选）
-     */
-    @Email(groups = {Create.class, Update.class}, message = "邮箱格式不正确")
-    private String email;
-
-    /**
-     * 用户手机号（可选）
-     */
-    private String phone;
 
     /**
      * 用户创建时间

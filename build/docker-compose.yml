@@ -22,6 +22,7 @@ services:
     restart: always
 
   # Nacos 服务
+  # 服务开启鉴权，在服务启动后，需要登录初始化账号
   nacos:
     image: nacos/nacos-server:latest
     container_name: nacos
@@ -48,8 +49,6 @@ services:
     volumes:
       # 持久化日志数据
       - ./docker/nacos/logs:/home/nacos/logs
-      # 自定义 Nacos 配置文件
-      - ./docker/nacos/init.d/custom.properties:/home/nacos/init.d/custom.properties
       # 数据持久化目录（可选）
       - ./docker/nacos/data:/home/nacos/data
     restart: always

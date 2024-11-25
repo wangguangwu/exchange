@@ -42,6 +42,10 @@ public class Response<T> {
         return new Response<>(ResponseEnum.SUCCESS.getCode(), ResponseEnum.SUCCESS.getMessage(), data);
     }
 
+    public static Response<Void> success() {
+        return new Response<>(ResponseEnum.SUCCESS.getCode(), ResponseEnum.SUCCESS.getMessage(), null);
+    }
+
     /**
      * 构造错误的响应
      *

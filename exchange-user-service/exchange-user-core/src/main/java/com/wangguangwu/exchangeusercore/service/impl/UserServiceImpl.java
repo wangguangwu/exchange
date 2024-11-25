@@ -5,15 +5,22 @@ import cn.hutool.crypto.digest.BCrypt;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wangguangwu.exchange.request.LoginRequest;
+import com.wangguangwu.exchange.request.ResetPasswordRequest;
+import com.wangguangwu.exchange.request.UpdatePasswordRequest;
 import com.wangguangwu.exchange.dto.UserDTO;
 import com.wangguangwu.exchange.dto.UserPageQuery;
 import com.wangguangwu.exchange.entity.UserInfoDO;
 import com.wangguangwu.exchange.entity.UserLoginRecordDO;
 import com.wangguangwu.exchange.exception.UserException;
+import com.wangguangwu.exchange.response.Response;
 import com.wangguangwu.exchange.service.UserInfoService;
 import com.wangguangwu.exchange.service.UserLoginRecordService;
+import com.wangguangwu.exchange.utils.IpUtil;
 import com.wangguangwu.exchange.utils.MappingUtils;
+import com.wangguangwu.exchangeusercore.service.LoginService;
 import com.wangguangwu.exchangeusercore.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,16 +38,6 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserInfoService userInfoService;
-    private final UserLoginRecordService userLoginRecordService;
-
-    @Override
-    public UserDTO getUserById(Long uid) {
-        UserInfoDO user = userInfoService.getById(uid);
-        if (user == null) {
-            throw new UserException("用户不存在，用户ID: " + uid);
-        }
-        return MappingUtils.map(user, UserDTO.class);
-    }
 
     @Override
     public void registerUser(UserDTO userDTO) {
@@ -51,8 +48,6 @@ public class UserServiceImpl implements UserService {
         UserInfoDO user = new UserInfoDO();
         user.setUsername(userDTO.getUsername());
         user.setPasswordHash(encryptPassword(userDTO.getPassword()));
-        user.setEmail(userDTO.getEmail());
-        user.setPhone(userDTO.getPhone());
 
         boolean success = userInfoService.save(user);
         if (success) {
@@ -64,74 +59,61 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String validateAndLogLogin(String username, String password, String ipAddress, String deviceInfo) {
-        log.info("尝试登录，用户名: {}, IP: {}, 设备信息: {}", username, ipAddress, deviceInfo);
+    public void updateUser(UpdatePasswordRequest request) {
+        // Step 1: 判断账户是否存在
+        log.info("开始检查用户是否存在，用户名: {}", request.getUsername());
+        UserInfoDO user = userInfoService.getOne(new LambdaQueryWrapper<UserInfoDO>()
+                .eq(UserInfoDO::getUsername, request.getUsername()));
 
-        // 查询用户信息
-        UserInfoDO user = userInfoService.getOne(new QueryWrapper<UserInfoDO>().eq("username", username));
-        // 用户不存在不用记录原因
         if (user == null) {
-            log.warn("登录失败，用户不存在: {}, IP: {}, 设备信息: {}", username, ipAddress, deviceInfo);
-            return "用户不存在";
+            log.warn("用户不存在，用户名: {}", request.getUsername());
+            throw new UserException("用户不存在，用户名: " + request.getUsername());
         }
 
-        // 验证用户信息
-        String errorMsg = validateUserCredentials(user, password, username, ipAddress, deviceInfo);
-
-        // 是否验证成功
-        boolean isSuccess = StrUtil.isBlank(errorMsg);
-
-        // 构造登录记录
-        UserLoginRecordDO loginRecord = buildLoginRecord(user, isSuccess, ipAddress, deviceInfo, errorMsg);
-
-        // 保存登录记录
-        userLoginRecordService.save(loginRecord);
-
-        if (!isSuccess) {
-            log.warn("登录失败原因: {}", errorMsg);
+        // Step 2: 判断密码是否正确
+        log.info("开始验证用户密码，用户名: {}", request.getUsername());
+        String currentPasswordHash = encryptPassword(request.getOldPassword());
+        if (!currentPasswordHash.equals(user.getPasswordHash())) {
+            log.warn("密码验证失败，用户名: {}", request.getUsername());
+            throw new UserException("当前密码错误，请重试！");
         }
 
-        return errorMsg;
-    }
+        // Step 3: 更新密码
+        log.info("开始更新用户密码，用户名: {}", request.getUsername());
+        String newPasswordHash = encryptPassword(request.getNewPassword());
+        user.setPasswordHash(newPasswordHash);
 
-    @Override
-    public void updateUser(UserDTO userDTO) {
-        log.info("开始更新用户信息，用户ID: {}", userDTO.getId());
-        UserInfoDO user = userInfoService.getById(userDTO.getId());
-        if (user == null) {
-            log.warn("更新失败，用户不存在: {}", userDTO.getId());
-            throw new UserException("用户不存在，用户ID: " + userDTO.getId());
-        }
-
-        user.setEmail(userDTO.getEmail());
-        user.setPhone(userDTO.getPhone());
-        user.setPasswordHash(encryptPassword(userDTO.getPassword()));
         boolean success = userInfoService.updateById(user);
         if (success) {
-            log.info("用户信息更新成功，用户ID: {}", userDTO.getId());
+            log.info("用户密码更新成功，用户名: {}", request.getUsername());
         } else {
-            log.error("用户信息更新失败，用户ID: {}", userDTO.getId());
-            throw new UserException("用户信息更新失败，用户ID: " + userDTO.getId());
+            log.error("用户密码更新失败，用户名: {}", request.getUsername());
+            throw new UserException("用户密码更新失败，用户名: " + request.getUsername());
         }
     }
 
     @Override
-    public List<UserDTO> listUsers(UserPageQuery query) {
-        // 使用 LambdaQueryWrapper 构建查询条件
-        LambdaQueryWrapper<UserInfoDO> wrapper = new LambdaQueryWrapper<>();
-        wrapper.like(query.getUsername() != null && !query.getUsername().isEmpty(), UserInfoDO::getUsername, query.getUsername());
-        wrapper.like(query.getEmail() != null && !query.getEmail().isEmpty(), UserInfoDO::getEmail, query.getEmail());
-        wrapper.like(query.getPhone() != null && !query.getPhone().isEmpty(), UserInfoDO::getPhone, query.getPhone());
+    public void resetPassword(ResetPasswordRequest request) {
+        log.info("开始检查用户是否存在，用户名: {}", request.getUsername());
+        UserInfoDO user = userInfoService.getOne(new LambdaQueryWrapper<UserInfoDO>()
+                .eq(UserInfoDO::getUsername, request.getUsername()));
+        if (user == null) {
+            log.warn("用户不存在，用户名: {}", request.getUsername());
+            throw new UserException("用户不存在，用户名: " + request.getUsername());
+        }
 
-        // 分页查询
-        Page<UserInfoDO> userPage = userInfoService.page(new Page<>(query.getPage(), query.getSize()), wrapper);
-        List<UserDTO> userList = userPage.getRecords()
-                .stream()
-                .map(data -> MappingUtils.map(data, UserDTO.class))
-                .collect(Collectors.toList());
+        // Step 2: 加密新密码
+        String newPasswordHash = encryptPassword(request.getNewPassword());
+        user.setPasswordHash(newPasswordHash);
 
-        log.info("分页查询完成，查询到用户数量: {}", userList.size());
-        return userList;
+        // Step 3: 更新用户信息
+        boolean success = userInfoService.updateById(user);
+        if (success) {
+            log.info("用户密码更新成功，用户名: {}", request.getUsername());
+        } else {
+            log.error("用户密码更新失败，用户名: {}", request.getUsername());
+            throw new UserException("用户密码更新失败，用户名: " + request.getUsername());
+        }
     }
 
     //=================================================私有方法============================================================

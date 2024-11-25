@@ -1,20 +1,17 @@
 package com.wangguangwu.exchangeusercore.controller;
 
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import com.wangguangwu.exchange.api.UserController;
 import com.wangguangwu.exchange.dto.UserDTO;
-import com.wangguangwu.exchange.dto.UserPageQuery;
+import com.wangguangwu.exchange.request.LoginRequest;
+import com.wangguangwu.exchange.request.ResetPasswordRequest;
+import com.wangguangwu.exchange.request.UpdatePasswordRequest;
 import com.wangguangwu.exchange.response.Response;
-import com.wangguangwu.exchange.utils.IpUtil;
+import com.wangguangwu.exchangeusercore.service.LoginService;
 import com.wangguangwu.exchangeusercore.service.UserService;
-import com.wangguangwu.exchangeusercore.util.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * 用户服务 API 实现类
@@ -27,86 +24,61 @@ import java.util.List;
 public class UserControllerImpl implements UserController {
 
     private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final LoginService loginService;
 
     @Override
-    public Response<UserDTO> getUser(Long uid) {
+    public Response<String> login(LoginRequest request, HttpServletRequest servletRequest) {
+        String username = request.getUsername();
         try {
-            log.info("开始获取用户信息，用户ID: {}", uid);
-            UserDTO user = userService.getUserById(uid);
-            log.debug("成功获取用户信息: {}", JSONUtil.toJsonStr(user));
-            return Response.success(user);
+            log.info("用户[{}]开始登录", username);
+            String token = loginService.login(request, servletRequest);
+            log.info("用户[{}]登录成功", username);
+            return Response.success(token);
         } catch (Exception e) {
-            log.error("获取用户信息失败，用户ID: {}, 错误信息: {}", uid, e.getMessage(), e);
-            return Response.error("获取用户信息失败");
+            // 捕获所有系统异常，记录日志并返回错误响应
+            log.error("用户[{}]登录失败， 错误信息: {}", username, e.getMessage(), e);
+            return Response.error(e.getMessage());
         }
     }
 
     @Override
-    public Response<String> register(UserDTO userDTO) {
+    public Response<Void> register(UserDTO userDTO) {
         try {
             log.info("开始注册用户，用户名: {}", userDTO.getUsername());
             userService.registerUser(userDTO);
             log.info("用户注册成功，用户名: {}", userDTO.getUsername());
-            return Response.success("注册成功");
+            return Response.success();
         } catch (Exception e) {
             log.error("用户注册失败，用户名: {}, 错误信息: {}", userDTO.getUsername(), e.getMessage(), e);
-            return Response.error("注册失败: " + e.getMessage());
+            return Response.error(e.getMessage());
+        }
+    }
+
+
+    @Override
+    public Response<Void> updatePassword(UpdatePasswordRequest request) {
+        String username = request.getUsername();
+        try {
+            log.info("开始更新用户信息，用户名: {}", username);
+            userService.updateUser(request);
+            log.info("用户信息更新成功，用户ID: {}", username);
+            return Response.success();
+        } catch (Exception e) {
+            log.error("更新用户信息失败，用户名: {}, 错误信息: {}", username, e.getMessage(), e);
+            return Response.error(e.getMessage());
         }
     }
 
     @Override
-    public Response<String> login(String username, String password, HttpServletRequest request) {
-        // 获取客户端 IP 地址和设备信息
-        String ipAddress = IpUtil.getClientIp(request);
-        String deviceInfo = request.getHeader("User-Agent");
-
-        log.info("用户登录请求，用户名: {}, IP: {}, 设备信息: {}", username, ipAddress, deviceInfo);
-
+    public Response<Void> resetPassword(ResetPasswordRequest request) {
+        String username = request.getUsername();
         try {
-            // 验证用户名和密码并记录登录信息
-            String validationError = userService.validateAndLogLogin(username, password, ipAddress, deviceInfo);
-
-            // 如果验证失败，返回错误响应
-            if (StrUtil.isNotBlank(validationError)) {
-                log.warn("用户登录失败，用户名: {}, IP: {}, 错误信息: {}", username, ipAddress, validationError);
-                return Response.error(validationError);
-            }
-
-            // 验证成功，生成并返回 Token
-            String token = jwtTokenProvider.generateToken(username);
-            log.info("用户登录成功，用户名: {}, IP: {}, 设备信息: {}", username, ipAddress, deviceInfo);
-            return Response.success(token);
-
+            log.info("开始找回密码操作，用户名: {}", username);
+            userService.resetPassword(request);
+            return Response.success();
         } catch (Exception e) {
-            // 捕获所有系统异常，记录日志并返回错误响应
-            log.error("用户登录失败（系统异常），用户名: {}, IP: {}, 错误信息: {}", username, ipAddress, e.getMessage(), e);
-            return Response.error("系统异常，请稍后重试");
-        }
-    }
-
-    @Override
-    public Response<String> updateUser(UserDTO userDTO) {
-        try {
-            log.info("开始更新用户信息，用户ID: {}", userDTO.getId());
-            userService.updateUser(userDTO);
-            log.info("用户信息更新成功，用户ID: {}", userDTO.getId());
-            return Response.success("更新成功");
-        } catch (Exception e) {
-            log.error("更新用户信息失败，用户ID: {}, 错误信息: {}", userDTO.getId(), e.getMessage(), e);
-            return Response.error("更新失败: " + e.getMessage());
-        }
-    }
-
-    @Override
-    public Response<List<UserDTO>> listUsers(UserPageQuery query) {
-        try {
-            log.info("查询用户列表，查询条件: {}", JSONUtil.toJsonStr(query));
-            List<UserDTO> users = userService.listUsers(query);
-            return Response.success(users);
-        } catch (Exception e) {
-            log.error("查询用户列表失败，查询条件: {}, 错误信息: {}", JSONUtil.toJsonStr(query), e.getMessage(), e);
-            return Response.error("查询用户列表失败: " + e.getMessage());
+            log.error("找回密码操作失败，用户名: {}, 错误信息: {}", username, e.getMessage(), e);
+            return Response.error(e.getMessage());
         }
     }
 }
