@@ -6,6 +6,7 @@ import com.wangguangwu.exchange.request.LoginRequest;
 import com.wangguangwu.exchange.request.RegisterRequest;
 import com.wangguangwu.exchange.request.ResetPasswordRequest;
 import com.wangguangwu.exchange.request.UpdatePasswordRequest;
+import com.wangguangwu.exchange.response.LoginResponse;
 import com.wangguangwu.exchange.response.Response;
 import com.wangguangwu.exchangeusercore.service.LoginService;
 import com.wangguangwu.exchangeusercore.service.UserService;
@@ -32,7 +33,7 @@ public class UserControllerImpl extends BaseController implements UserController
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public Response<String> login(LoginRequest request, HttpServletRequest servletRequest) {
+    public Response<LoginResponse> login(LoginRequest request, HttpServletRequest servletRequest) {
         String username = request.getUsername();
         return execute(() -> {
             log.info("用户[{}]尝试登录", username);

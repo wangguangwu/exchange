@@ -17,4 +17,8 @@ public final class PasswordUtil {
     public static String encryptPassword(String rawPassword) {
         return BCrypt.hashpw(rawPassword, BCrypt.gensalt());
     }
+
+    public static boolean isMatch(String rawPassword, String newPassword) {
+        return validatePassword(rawPassword, newPassword);
+    }
 }

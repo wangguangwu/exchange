@@ -93,14 +93,13 @@ public class UserServiceImpl implements UserService {
     /**
      * 验证密码是否正确
      *
-     * @param inputPassword 输入的密码
+     * @param inputPassword      输入的密码
      * @param storedPasswordHash 存储的密码哈希
-     * @param username 用户名
+     * @param username           用户名
      */
     private void validatePassword(String inputPassword, String storedPasswordHash, String username) {
         log.info("开始验证用户密码，用户名: {}", username);
-        String inputPasswordHash = PasswordUtil.encryptPassword(inputPassword);
-        if (!inputPasswordHash.equals(storedPasswordHash)) {
+        if (!PasswordUtil.isMatch(inputPassword, storedPasswordHash)) {
             log.warn("密码验证失败，用户名: {}", username);
             throw new UserException("当前密码错误，请重试！");
         }
@@ -109,9 +108,9 @@ public class UserServiceImpl implements UserService {
     /**
      * 更新用户密码
      *
-     * @param user 用户信息对象
+     * @param user        用户信息对象
      * @param newPassword 新密码
-     * @param username 用户名
+     * @param username    用户名
      */
     private void updatePasswordForUser(UserInfoDO user, String newPassword, String username) {
         log.info("开始更新用户密码，用户名: {}", username);

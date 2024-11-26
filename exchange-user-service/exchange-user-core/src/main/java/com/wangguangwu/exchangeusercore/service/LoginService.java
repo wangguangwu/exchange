@@ -1,6 +1,7 @@
 package com.wangguangwu.exchangeusercore.service;
 
 import com.wangguangwu.exchange.request.LoginRequest;
+import com.wangguangwu.exchange.response.LoginResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -19,6 +20,6 @@ public interface LoginService {
      * @return 登录成功后生成的 Token，用于用户后续的身份认证
      * @throws com.wangguangwu.exchange.exception.UserException 如果用户名或密码错误，或其他验证失败的场景
      */
-    String login(LoginRequest request, HttpServletRequest servletRequest);
+    LoginResponse login(LoginRequest request, HttpServletRequest servletRequest);
 
 }

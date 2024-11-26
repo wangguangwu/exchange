@@ -23,11 +23,17 @@ public class GlobalExceptionHandler {
      * @return 包含详细错误信息的响应
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Response<List<String>> handleValidationException(MethodArgumentNotValidException ex) {
+    public Response<String> handleValidationException(MethodArgumentNotValidException ex) {
+        // 收集所有字段错误信息
         List<String> errors = ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> String.format("字段 [%s] 错误: %s", error.getField(), error.getDefaultMessage()))
+                .map(error -> String.format("[%s]: %s", error.getField(), error.getDefaultMessage()))
                 .collect(Collectors.toList());
-        return Response.error("参数校验失败", errors);
+
+        // 将错误信息拼接为单个字符串
+        String errorDetails = String.join("; ", errors);
+
+        // 返回包含具体错误信息的响应
+        return Response.error(String.format("参数校验失败: %s", errorDetails));
     }
 
     /**
@@ -38,6 +44,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public Response<String> handleException(Exception ex) {
-        return Response.error("系统异常", ex.getMessage());
+        return Response.error("系统异常:" + ex.getMessage());
     }
 }

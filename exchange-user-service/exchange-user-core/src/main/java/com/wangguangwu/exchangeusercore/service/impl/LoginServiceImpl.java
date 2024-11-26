@@ -6,6 +6,7 @@ import com.wangguangwu.exchange.entity.UserInfoDO;
 import com.wangguangwu.exchange.entity.UserLoginRecordDO;
 import com.wangguangwu.exchange.exception.UserException;
 import com.wangguangwu.exchange.request.LoginRequest;
+import com.wangguangwu.exchange.response.LoginResponse;
 import com.wangguangwu.exchange.service.UserInfoService;
 import com.wangguangwu.exchange.service.UserLoginRecordService;
 import com.wangguangwu.exchange.utils.IpUtil;
@@ -34,7 +35,7 @@ public class LoginServiceImpl implements LoginService {
     private final UserLoginRecordService userLoginRecordService;
 
     @Override
-    public String login(LoginRequest request, HttpServletRequest servletRequest) {
+    public LoginResponse login(LoginRequest request, HttpServletRequest servletRequest) {
         // 提取用户名和密码
         String username = request.getUsername();
         String password = request.getPassword();
@@ -70,7 +71,7 @@ public class LoginServiceImpl implements LoginService {
         String token = jwtTokenProvider.generateToken(username);
         log.info("用户登录成功，用户名: {}, IP: {}, 设备信息: {}", username, ipAddress, deviceInfo);
 
-        return token;
+        return LoginResponse.create(token, user);
     }
 
     /**

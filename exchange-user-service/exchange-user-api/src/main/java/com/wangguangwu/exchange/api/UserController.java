@@ -4,6 +4,7 @@ import com.wangguangwu.exchange.request.LoginRequest;
 import com.wangguangwu.exchange.request.RegisterRequest;
 import com.wangguangwu.exchange.request.ResetPasswordRequest;
 import com.wangguangwu.exchange.request.UpdatePasswordRequest;
+import com.wangguangwu.exchange.response.LoginResponse;
 import com.wangguangwu.exchange.response.Response;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.validation.annotation.Validated;
@@ -27,7 +28,7 @@ public interface UserController {
      * @return 成功时返回包含 Token 的响应，失败时返回错误信息
      */
     @PostMapping("/login")
-    Response<String> login(@Validated @RequestBody LoginRequest request, HttpServletRequest servletRequest);
+    Response<LoginResponse> login(@Validated @RequestBody LoginRequest request, HttpServletRequest servletRequest);
 
     /**
      * 用户注册接口
